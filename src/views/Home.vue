@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <b>IATI data visualization</b>
-    <h2>Something</h2>
+    <b>Funding by sector</b>
+    <input v-model="query" placeholder="Enter org code" type="text">
     <FundingBarChart :label="sectors" :chart-data="budget"></FundingBarChart>
   </div>
 </template>
@@ -19,6 +19,8 @@ export default {
     return {
       sectors : ["A"],
       budget: [0],
+      status:'',
+      query: ''
     }
   },
   components : {
