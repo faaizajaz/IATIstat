@@ -1,0 +1,13 @@
+GET ENTRIES BY ORG:
+https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:GB-GOV-1
+
+FILTER THE FIELDS RETURNED
+This example returns any field that begins with "sector"
+https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:GB-GOV-1&fl=sector,title_narrative
+
+DO IT BY ROW (RETURN 500 ROWS)
+https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:GB-GOV-1&fl=sector*&rows=500
+
+START AT A DIFFERENT ROW
+https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:GB-GOV-1&fl=sector*&rows=500&start=50
+
