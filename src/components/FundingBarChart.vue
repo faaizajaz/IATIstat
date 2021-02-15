@@ -13,15 +13,15 @@ export default {
       type: Array
     }
   },
-  async mounted() {
-    await new Chart(this.$refs.sectorChart,{
+  mounted() {
+    new Chart(this.$refs.sectorChart,{
       type: 'bar',
       data: {
         labels: this.label,
         datasets: [
         {
           label: 'SECTORS',
-          backgroundColor: 'rgba(144,238,144,0.9',
+          backgroundColor: 'rgba(54,140,244,0.9',
           data: this.chartData,
         }]
       },
