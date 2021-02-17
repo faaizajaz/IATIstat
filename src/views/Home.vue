@@ -1,9 +1,19 @@
 <template>
   <div class="home">
     <b>Funding by sector</b>
-    <input v-model="query" placeholder="Enter org code" type="text">
+    <input id="org-code" v-model="organization" placeholder="Enter org code" type="text">
     <button v-on:click="fetch_data">Submit</button>
-    <FundingBarChart :label="sectors" :chart-data="budget"></FundingBarChart>
+    <br>
+    <br>
+    <p>
+      <b>Example org codes:</b>
+      <br>
+      <i>GB-GOV-1</i>: FCDO
+      <br>
+      <i>XM-DAC-41301</i>: FAO
+      <br>
+    </p>
+      <FundingBarChart :label="sectors" :chart-data="budget"></FundingBarChart>
   </div>
 </template>
 
@@ -21,7 +31,7 @@ export default {
       sectors : ["A"],
       budget: [0],
       status:'',
-      query: ''
+      organization: ''
     }
   },
   components : {
@@ -32,7 +42,7 @@ export default {
       //because we have a scope inside this function
       var vm = this
       //Hard-coded to retrieve 30k results.
-      await axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:GB-GOV-1&fl=sector,title_narrative,budget_value_usd_sum&rows=30000").then(function(data) {
+      await axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=sector,title_narrative,budget_value_usd_sum&rows=30000").then(function(data) {
         console.log(data);
         for(var i=0; i<data.data.response.docs.length; i++){
           // API is broken so need to convert to JSON and catch TypeError
