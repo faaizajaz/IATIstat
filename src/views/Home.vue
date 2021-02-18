@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <b>Funding by sector</b>
+    <b>Enter an organization code: </b>
     <input id="org-code" v-model="organization" placeholder="Enter org code" type="text">
     <button v-on:click="fetch_data">Submit</button>
     <br>
