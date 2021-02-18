@@ -45,7 +45,8 @@ export default {
           }
         },
         xaxis: {
-          categories: []
+          categories: [],
+          tickPlacement: 'on'
         },
 
         noData: {
