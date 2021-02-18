@@ -31,7 +31,18 @@ export default {
     return {
       options: {
         chart: {
-          id: 'fundingbarchart'
+          id: 'fundingbarchart',
+          toolbar: {
+            show: true,
+            tools: {
+              selection: true,
+              zoom: true,
+              zoomin: true,
+              zoomout: true,
+              pan: true,
+              reset: true
+            }
+          }
         },
         xaxis: {
           categories: []
@@ -58,16 +69,11 @@ export default {
   },
   methods: {
     fetch_data: function() {
-      //console.log(this.series[0].data)
-      //console.log(this.options.xaxis)
-
       //because we have a scope inside this function
       var vm = this
       //Hard-coded to retrieve 30k results.
       axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=sector,title_narrative,budget_value_usd_sum&rows=30000").then(function(data) {
         console.log(data);
-        //vm.options.xaxis.categories = []
-        //vm.series[0].data = []
         var newseries = [];
         var newcategories = [];
         for(var i=0; i<data.data.response.docs.length; i++){
@@ -100,13 +106,11 @@ export default {
               newseries.push(0);
             } else {
               // Otherwise add the budget of the current activity as the initial value for the sector
-              //console.log(newseries)
               newseries.push(data.data.response.docs[i].budget_value_usd_sum)
-              //console.log(Array.isArray(newseries))
-              //newseries.push(3432)
             }
           }
       }
+      // Now update the chart data
       vm.series = [{
         data: newseries
       }]
