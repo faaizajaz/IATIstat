@@ -13,7 +13,9 @@
       <i>XM-DAC-41301</i>: FAO
       <br>
     </p>
-      <FundingBarChart :label="sectors" :chart-data="budget"></FundingBarChart>
+      <apexchart height=600 type="bar" :options="options" :series="series">
+
+      </apexchart>
   </div>
 </template>
 
@@ -21,29 +23,53 @@
 // @ is an alias to /src
 //import HelloWorld from '@/components/HelloWorld.vue'
 //import Chart from 'chart.js'
-import FundingBarChart from '@/components/FundingBarChart'
 const axios = require("axios")
 
 export default {
   name: 'Home',
-  data : ()=> {
+  data : function() {
     return {
-      sectors : ["A"],
-      budget: [0],
-      status:'',
-      organization: ''
+      options: {
+        chart: {
+          id: 'fundingbarchart'
+        },
+        xaxis: {
+          categories: []
+        },
+
+        noData: {
+          text: "Loading"
+        }
+      },
+      series: [{
+        data: []
+      }],
+
+      loaded: false,
+      organization:''
     }
-  },
-  components : {
-    FundingBarChart
+
+
+   /* sectors : ["A"],
+    budget: [0],
+    status:'',
+    organization: ''*/
+
   },
   methods: {
-    fetch_data: async function() {
+    fetch_data: function() {
+      //console.log(this.series[0].data)
+      //console.log(this.options.xaxis)
+
       //because we have a scope inside this function
       var vm = this
       //Hard-coded to retrieve 30k results.
-      await axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=sector,title_narrative,budget_value_usd_sum&rows=30000").then(function(data) {
+      axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=sector,title_narrative,budget_value_usd_sum&rows=30000").then(function(data) {
         console.log(data);
+        //vm.options.xaxis.categories = []
+        //vm.series[0].data = []
+        var newseries = [];
+        var newcategories = [];
         for(var i=0; i<data.data.response.docs.length; i++){
           // API is broken so need to convert to JSON and catch TypeError
           try{
@@ -55,29 +81,44 @@ export default {
           // Get the current USD budget value
           var curr_budget = data.data.response.docs[i].budget_value_usd_sum
           // Check if the current activity's sector is already in the array of sectors
-          if(vm.sectors.includes(curr_sector_name)) {
+          if(newcategories.includes(curr_sector_name)) {
             // If it is, check the index of the sector
-            var a = vm.sectors.indexOf(curr_sector_name);
+            var a = newcategories.indexOf(curr_sector_name);
             // Then, if a budget is specified...
             if(typeof curr_budget !== 'undefined') {
               // Add it to the budget array using the same index
-              var res = vm.budget[a] + curr_budget;
-              vm.budget[a] = res;
+              var res = newseries[a] + curr_budget;
+              newseries[a] = res;
             }
           }
           // Else if the sector is new
           else {
             // Add the sector to the sectors array
-            vm.sectors.push(curr_sector_name);
+            newcategories.push(curr_sector_name);
             // If there is no budget, make it 0
             if(typeof curr_budget == 'undefined') {
-              vm.budget.push(0);
+              newseries.push(0);
             } else {
               // Otherwise add the budget of the current activity as the initial value for the sector
-              vm.budget.push(data.data.response.docs[i].budget_value_usd_sum)
+              //console.log(newseries)
+              newseries.push(data.data.response.docs[i].budget_value_usd_sum)
+              //console.log(Array.isArray(newseries))
+              //newseries.push(3432)
             }
           }
       }
+      vm.series = [{
+        data: newseries
+      }]
+      vm.options = {...vm.options,...{
+        xaxis: {
+          categories:newcategories
+        }
+      }
+
+      }
+      console.log(newseries)
+      console.log(vm.options.xaxis.categories)
 
       })
     }
