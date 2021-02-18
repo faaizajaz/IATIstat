@@ -104,6 +104,7 @@ export default {
           }
         }
         // Now update the chart data
+        // REMEMBER: You can't do vm.options.xaxis.vcategories = newcategories for some reason. The WHOLE OBJECT needs to be updated.
         vm.series = [{
           data: newseries
         }]
