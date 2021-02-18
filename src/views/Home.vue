@@ -60,13 +60,6 @@ export default {
       loaded: false,
       organization:''
     }
-
-
-   /* sectors : ["A"],
-    budget: [0],
-    status:'',
-    organization: ''*/
-
   },
   methods: {
     fetch_data: function() {
@@ -74,7 +67,6 @@ export default {
       var vm = this
       //Hard-coded to retrieve 30k results.
       axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=sector,title_narrative,budget_value_usd_sum&rows=30000").then(function(data) {
-        console.log(data);
         var newseries = [];
         var newcategories = [];
         for(var i=0; i<data.data.response.docs.length; i++){
@@ -110,21 +102,17 @@ export default {
               newseries.push(data.data.response.docs[i].budget_value_usd_sum)
             }
           }
-      }
-      // Now update the chart data
-      vm.series = [{
-        data: newseries
-      }]
-      vm.options = {...vm.options,...{
-        xaxis: {
-          categories:newcategories
         }
-      }
-
-      }
-      console.log(newseries)
-      console.log(vm.options.xaxis.categories)
-
+        // Now update the chart data
+        vm.series = [{
+          data: newseries
+        }]
+        vm.options = {...vm.options,...{
+          xaxis: {
+            categories:newcategories
+          }
+        }
+        }
       })
     }
   }
