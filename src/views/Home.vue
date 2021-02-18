@@ -20,9 +20,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
-//import HelloWorld from '@/components/HelloWorld.vue'
-//import Chart from 'chart.js'
+
 const axios = require("axios")
 
 export default {
@@ -63,10 +61,13 @@ export default {
   },
   methods: {
     fetch_data: function() {
+      var filters = "transaction_type,transaction_value_date,transaction_value_usd,transaction_value_usd_sum,sector,title_narrative,budget_value_usd_sum"
       //because we have a scope inside this function
       var vm = this
       //Hard-coded to retrieve 30k results.
-      axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=sector,title_narrative,budget_value_usd_sum&rows=30000").then(function(data) {
+      axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=" + filters +"&rows=30000").then(function(data) {
+        console.log(data)
+        // empty arrays to store response
         var newseries = [];
         var newcategories = [];
         for(var i=0; i<data.data.response.docs.length; i++){
@@ -110,7 +111,7 @@ export default {
         }]
         vm.options = {...vm.options,...{
           xaxis: {
-            categories:newcategories
+            categories: newcategories
           }
         }
         }
