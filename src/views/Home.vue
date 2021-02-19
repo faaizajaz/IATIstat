@@ -2,6 +2,7 @@
   <div class="home">
     <b>Enter an organization code: </b>
     <input id="org-code" v-model="organization" placeholder="Enter org code" type="text">
+    <input id="target_year" v-model="target_year" placeholder="XXXX" type="text">
     <button v-on:click="fetch_data">Submit</button>
     <br>
     <br>
@@ -58,7 +59,7 @@ export default {
 
       loaded: false,
       organization:'',
-      target_year: 2019
+      target_year: 0
     }
   },
   methods: {
@@ -67,7 +68,7 @@ export default {
       //because we have a scope inside this function
       var vm = this
       //Hard-coded to retrieve 30k results.
-      axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=" + filters +"&rows=300").then(function(data) {
+      axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=" + filters +"&rows=30000").then(function(data) {
         console.log(data)
         var numrecords = 0
         // empty arrays to store response
@@ -149,10 +150,15 @@ export default {
       var vm = this;
       // eslint-disable-next-line no-unused-vars
       let sum = 0;
-      for (var i=0; i < values.length; i++) {
-        if (isodate(dates[i]).getFullYear() == vm.target_year) {
-          sum += values[i]
+      //catch instances where transaction value are undefined
+      try {
+        for (let i=0; i < values.length; i++) {
+          if (isodate(dates[i]).getFullYear() == vm.target_year) {
+            sum += values[i]
+          }
         }
+      } catch (e) {
+        return 0
       }
       return sum
     }
