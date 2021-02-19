@@ -2,6 +2,7 @@
   <div class="home">
     <b>Enter an organization code: </b>
     <input id="org-code" v-model="organization" placeholder="Enter org code" type="text">
+    <b>Enter a year (e.g. 2017)</b>
     <input id="target_year" v-model="target_year" placeholder="XXXX" type="text">
     <button v-on:click="fetch_data">Submit</button>
     <br>
