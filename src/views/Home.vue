@@ -71,24 +71,25 @@ export default {
   },
   methods: {
     fetch_data: function() {
-      var filters = "transaction_type,transaction_value_date,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency"
+      this.numrecords =0;
+      let filters = "transaction_type,transaction_value_date,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency";
       //because we have a scope inside this function
-      var vm = this
+      let vm = this;
       //Hard-coded to retrieve 30k results.
       axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=" + filters +"&rows=30000").then(function(data) {
-        console.log(data)
+        console.log(data);
         //var vm.numrecords = 0
         // empty arrays to store response
-        var newseries = [];
-        var newcategories = [];
+        let newseries = [];
+        let newcategories = [];
         //var transaction_date_series = [];
-        for(var i=0; i<data.data.response.docs.length; i++){
-          var curr_transaction_value = data.data.response.docs[i].transaction_value
-          var curr_transaction_date = data.data.response.docs[i].transaction_value_date
+        for(let i=0; i<data.data.response.docs.length; i++){
+          let curr_transaction_value = data.data.response.docs[i].transaction_value;
+          let curr_transaction_date = data.data.response.docs[i].transaction_value_date;
           // Need to catch exception in case of parse throwing typerror
           try{
             // Get the sector name of the current ativity
-            var curr_sector_name = JSON.parse(data.data.response.docs[i].sector).sector.name
+            var curr_sector_name = JSON.parse(data.data.response.docs[i].sector).sector.name;
           } catch(e) {
             // Skip to next item if error
             continue
@@ -100,7 +101,7 @@ export default {
             // If it is, check the index of the sector
             let a = newcategories.indexOf(curr_sector_name);
             // Get the sum of all transactions in the target year
-            let transaction_sum = vm.sum_transactions(curr_transaction_value, curr_transaction_date)
+            let transaction_sum = vm.sum_transactions(curr_transaction_value, curr_transaction_date);
             // add it to total for sector
             let res = newseries[a] + transaction_sum;
             newseries[a] = res;
@@ -112,8 +113,8 @@ export default {
             if (typeof curr_transaction_value== 'undefined') {
               newseries.push(0);
             } else {
-              let transaction_sum = vm.sum_transactions(curr_transaction_value, curr_transaction_date)
-              newseries.push(transaction_sum)
+              let transaction_sum = vm.sum_transactions(curr_transaction_value, curr_transaction_date);
+              newseries.push(transaction_sum);
             }
           }
         }
@@ -132,13 +133,13 @@ export default {
       })
     },
     sum_transactions: function(values, dates) {
-      var vm = this;
+      let vm = this;
       let sum = 0;
       //catch instances where transaction value are undefined
       try {
         for (let i=0; i < values.length; i++) {
           if (isodate(dates[i]).getFullYear() == vm.target_year) {
-            sum += values[i]
+            sum += values[i];
           }
         }
       } catch (e) {
