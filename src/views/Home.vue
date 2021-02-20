@@ -72,7 +72,9 @@ export default {
   },
   methods: {
     fetch_data: function() {
+      // number of records aggregated
       this.numrecords =0;
+      // running total of total transaction value for the period
       this.running_total=0;
       let filters = "transaction_type,transaction_value_date,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency";
       //because we have a scope inside this function
@@ -86,23 +88,27 @@ export default {
         let newcategories = [];
         //var transaction_date_series = [];
         for(let i=0; i<data.data.response.docs.length; i++){
+          // get arrays of transaction values and dates for current record
           let curr_transaction_value = data.data.response.docs[i].transaction_value;
           let curr_transaction_date = data.data.response.docs[i].transaction_value_date;
+
+          // Create a new array with only transaction years
           let curr_transaction_years = []
+          // First check that transaction date array is not undefined
           if(typeof curr_transaction_date !== 'undefined') {
+            // then, loop through the transaction dates array
             for(let z=0; z<curr_transaction_date.length; z++) {
               try{
+                // and populate the years array with the 4-digit years of all transactions
                 curr_transaction_years.push(isodate(curr_transaction_date[z]).getFullYear());
-                //console.log(isodate(curr_transaction_date).getFullYear())
+              // Catch typerror thrown by isodate, because I'm bad at JS
               } catch(e) {
                 console.log(e)
                 continue
               }
             }
           }
-          //console.log(curr_transaction_years);
-
-          // Need to catch exception in case of parse throwing typerror
+          // Need to catch exception in case of JSON.parse throwing typerror
           try{
             // Get the sector name of the current ativity
             var curr_sector_name = JSON.parse(data.data.response.docs[i].sector).sector.name;
@@ -110,13 +116,12 @@ export default {
             // Skip to next item if error
             continue
           }
+          // Make sure array fo transaction years isnt undefined
           if (typeof curr_transaction_years !== 'undefined') {
-            //console.log(curr_transaction_years.includes(parseInt(vm.target_year,10)))
-            //console.log(typeof parseInt(vm.target_year,10))
-
+            // Then check to see if an transactions were in the target year
             if(curr_transaction_years.includes(parseInt(vm.target_year,10))) {
+              // increment tally of records aggregated
               vm.numrecords += 1;
-
               // Check if the current activity's sector is already in the array of sectors
               if(newcategories.includes(curr_sector_name)) {
                 // If it is, check the index of the sector
@@ -133,11 +138,15 @@ export default {
               else {
                 // Add the sector to the sectors array
                 newcategories.push(curr_sector_name);
+                // If there is no transaction value for the current record
                 if (typeof curr_transaction_value== 'undefined') {
+                  // make the initial value 0
                   newseries.push(0);
                 } else {
+                  // Otherwise add the transaction value to the total
                   let transaction_sum = vm.sum_transactions(curr_transaction_value, curr_transaction_date);
                   newseries.push(transaction_sum);
+                  // And add to the running total
                   vm.running_total += transaction_sum
                 }
               }
@@ -157,8 +166,6 @@ export default {
         }}
         // Check how many records were aggregated
         console.log(vm.numrecords)
-        console.log(newcategories)
-        console.log(newseries)
       })
     },
     sum_transactions: function(values, dates) {
