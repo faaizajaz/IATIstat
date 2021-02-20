@@ -17,8 +17,9 @@
       <i>XM-DAC-41301</i>: FAO
       <br>
       <br>
-      <i>Searched {{ numrecords }} records.</i>
+      <i>Aggregated {{ numrecords }} records.</i>
       <br>
+      <i>Total funding amount for {{ target_year }}: {{ running_total }}</i>
     </p>
       <apexchart height=600 type="bar" :options="options" :series="series">
 
