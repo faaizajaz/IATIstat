@@ -88,8 +88,7 @@ export default {
       let vm = this;
       //Hard-coded to retrieve 30k results.
       axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=" + filters +"&rows=30000").then(function(data) {
-        console.log(data);
-        //var vm.numrecords = 0
+        //console.log(data);
         // empty arrays to store response
         let newseries = [];
         let newcategories = [];
@@ -160,7 +159,6 @@ export default {
             }
           }
         }
-        console.log(vm.running_total)
         // Now update the chart data
         // REMEMBER: You can't do vm.options.xaxis.categories = newcategories for some reason. The WHOLE OBJECT needs to be updated.
         vm.series = [{
@@ -172,7 +170,6 @@ export default {
           }
         }}
         // Check how many records were aggregated
-        console.log(vm.numrecords)
       })
     },
     sum_transactions: function(values, dates) {
