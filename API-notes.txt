@@ -11,3 +11,11 @@ https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:GB-G
 START AT A DIFFERENT ROW
 https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:GB-GOV-1&fl=sector*&rows=500&start=50
 
+
+
+More interesting analysis:
+- which countries fund what
+- which orgs report
+- how frequently do orgs report
+- comparing reported against published budgets
+
