@@ -51,9 +51,15 @@ export default {
             }
           }
         },
+        dataLabels: {
+          enabled: false
+        },
         xaxis: {
           categories: [],
           tickPlacement: 'on'
+        },
+        yaxis: {
+          min: 0
         },
 
         noData: {
