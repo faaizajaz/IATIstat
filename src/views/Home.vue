@@ -4,7 +4,7 @@
     <input id="org-code" v-model="organization" placeholder="Enter org code" type="text">
     <br>
     <b>Enter a year (e.g. 2017)</b>
-    <input id="target_year" v-model="target_year" placeholder="XXXX" type="text">
+    <input id="target_year" v-model="target_year" type="number">
     <br>
     <button v-on:click="fetch_data">Submit</button>
     <br>
@@ -66,12 +66,14 @@ export default {
       loaded: false,
       organization:'',
       target_year: 0,
-      numrecords: 0
+      numrecords: 0,
+      running_total: 0
     }
   },
   methods: {
     fetch_data: function() {
       this.numrecords =0;
+      this.running_total=0;
       let filters = "transaction_type,transaction_value_date,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency";
       //because we have a scope inside this function
       let vm = this;
@@ -86,6 +88,20 @@ export default {
         for(let i=0; i<data.data.response.docs.length; i++){
           let curr_transaction_value = data.data.response.docs[i].transaction_value;
           let curr_transaction_date = data.data.response.docs[i].transaction_value_date;
+          let curr_transaction_years = []
+          if(typeof curr_transaction_date !== 'undefined') {
+            for(let z=0; z<curr_transaction_date.length; z++) {
+              try{
+                curr_transaction_years.push(isodate(curr_transaction_date[z]).getFullYear());
+                //console.log(isodate(curr_transaction_date).getFullYear())
+              } catch(e) {
+                console.log(e)
+                continue
+              }
+            }
+          }
+          //console.log(curr_transaction_years);
+
           // Need to catch exception in case of parse throwing typerror
           try{
             // Get the sector name of the current ativity
@@ -94,30 +110,41 @@ export default {
             // Skip to next item if error
             continue
           }
-          vm.numrecords += 1;
+          if (typeof curr_transaction_years !== 'undefined') {
+            //console.log(curr_transaction_years.includes(parseInt(vm.target_year,10)))
+            //console.log(typeof parseInt(vm.target_year,10))
 
-          // Check if the current activity's sector is already in the array of sectors
-          if(newcategories.includes(curr_sector_name)) {
-            // If it is, check the index of the sector
-            let a = newcategories.indexOf(curr_sector_name);
-            // Get the sum of all transactions in the target year
-            let transaction_sum = vm.sum_transactions(curr_transaction_value, curr_transaction_date);
-            // add it to total for sector
-            let res = newseries[a] + transaction_sum;
-            newseries[a] = res;
-          }
-          // Else if the sector is new
-          else {
-            // Add the sector to the sectors array
-            newcategories.push(curr_sector_name);
-            if (typeof curr_transaction_value== 'undefined') {
-              newseries.push(0);
-            } else {
-              let transaction_sum = vm.sum_transactions(curr_transaction_value, curr_transaction_date);
-              newseries.push(transaction_sum);
+            if(curr_transaction_years.includes(parseInt(vm.target_year,10))) {
+              vm.numrecords += 1;
+
+              // Check if the current activity's sector is already in the array of sectors
+              if(newcategories.includes(curr_sector_name)) {
+                // If it is, check the index of the sector
+                let a = newcategories.indexOf(curr_sector_name);
+                // Get the sum of all transactions in the target year
+                let transaction_sum = vm.sum_transactions(curr_transaction_value, curr_transaction_date);
+                // add it to total for sector
+                let res = newseries[a] + transaction_sum;
+                newseries[a] = res;
+                //add it to running total
+                vm.running_total += transaction_sum
+              }
+              // Else if the sector is new
+              else {
+                // Add the sector to the sectors array
+                newcategories.push(curr_sector_name);
+                if (typeof curr_transaction_value== 'undefined') {
+                  newseries.push(0);
+                } else {
+                  let transaction_sum = vm.sum_transactions(curr_transaction_value, curr_transaction_date);
+                  newseries.push(transaction_sum);
+                  vm.running_total += transaction_sum
+                }
+              }
             }
           }
         }
+        console.log(vm.running_total)
         // Now update the chart data
         // REMEMBER: You can't do vm.options.xaxis.categories = newcategories for some reason. The WHOLE OBJECT needs to be updated.
         vm.series = [{
@@ -130,6 +157,8 @@ export default {
         }}
         // Check how many records were aggregated
         console.log(vm.numrecords)
+        console.log(newcategories)
+        console.log(newseries)
       })
     },
     sum_transactions: function(values, dates) {
@@ -138,7 +167,7 @@ export default {
       //catch instances where transaction value are undefined
       try {
         for (let i=0; i < values.length; i++) {
-          if (isodate(dates[i]).getFullYear() == vm.target_year) {
+          if (isodate(dates[i]).getFullYear() == parseInt(vm.target_year,10)) {
             sum += values[i];
           }
         }
