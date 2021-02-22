@@ -1,25 +1,18 @@
 {
-	"folders":
-	[
-		{
-			"path": "."
-		}
-	],
-	"settings":
-	{
-		"LSP":
-		{
-			"lsp-eslint":
-			{
-				"enabled": true
-			},
-			"lsp-vue":
-			{
-				"enabled": true
-			}
-		},
-		"debug.configurations":
-		[
-		]
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "LSP": {
+      "lsp-eslint": {
+        "enabled": true
+      },
+      "lsp-vue": {
+        "enabled": true
+      }
+    },
+    "debug.configurations": []
+  }
 }
