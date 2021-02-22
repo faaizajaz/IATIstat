@@ -50,7 +50,7 @@ export default {
       let vm = this;
       //Hard-coded to retrieve 30k results.
       axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=" + filters +"&rows=30000").then(function(data) {
-          vm.input_data = data
+          vm.input_data = data;
           //console.log(data)
       })
     },

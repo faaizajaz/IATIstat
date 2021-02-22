@@ -69,6 +69,7 @@ export default {
       immediate: true,
       handler: function() {
         this.numrecords = 0;
+        this.running_total=0;
         let newseries = [];
         let newcategories = [];
         try {
@@ -77,7 +78,7 @@ export default {
             let curr_transaction_value = this.raw_data.data.response.docs[i].transaction_value;
             let curr_transaction_date = this.raw_data.data.response.docs[i].transaction_value_date;
             // Create a new array with only transaction years
-            let curr_transaction_years = []
+            let curr_transaction_years = [];
             // First check that transaction date array is not undefined
             if(typeof curr_transaction_date !== 'undefined') {
               // then, loop through the transaction dates array
@@ -87,7 +88,7 @@ export default {
                   curr_transaction_years.push(isodate(curr_transaction_date[z]).getFullYear());
                 // Catch typerror thrown by isodate, because I'm bad at JS
                 } catch(e) {
-                  console.log(e)
+                  console.log(e);
                   continue
                 }
               }
@@ -117,7 +118,7 @@ export default {
                   let res = newseries[a] + transaction_sum;
                   newseries[a] = res;
                   //add it to running total
-                  this.running_total += transaction_sum
+                  this.running_total += transaction_sum;
                 }
                 // Else if the sector is new
                 else {
@@ -133,7 +134,7 @@ export default {
                     let transaction_sum = this.sum_transactions(curr_transaction_value, curr_transaction_date);
                     newseries.push(transaction_sum);
                     // And add to the running total
-                    this.running_total += transaction_sum
+                    this.running_total += transaction_sum;
                   }
                 }
               }
@@ -151,7 +152,7 @@ export default {
           }}
 
         } catch (e) {
-          console.log("An error was thrown. Probably because there is no input data")
+          console.log("An error was thrown. Probably because there is no input data");
           //console.log(e)
         }
       }
