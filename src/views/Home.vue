@@ -4,7 +4,7 @@
     <input id="org-code" v-model="organization" placeholder="Enter org code" type="text">
     <br>
     <b>Enter a year (e.g. 2017)</b>
-    <input id="target_year" v-model="target_year" type="number">
+    <input id="target_year" v-model="target_year" type="text">
     <br>
     <button v-on:click="fetch_data">Submit</button>
     <br>
@@ -17,10 +17,8 @@
       <i>XM-DAC-41301</i>: FAO
       <br>
       <br>
-      <i>Aggregated {{ numrecords }} records.</i>
-      <br>
     </p>
-      <OrgBySectorYear v-bind:raw_data="this.input_data" v-if="this.input_data.length"></OrgBySectorYear>
+      <OrgBySectorYear v-bind:raw_data="input_data" v-bind:target_year="target_year"></OrgBySectorYear>
   </div>
 </template>
 
@@ -35,9 +33,7 @@ export default {
     return {
       input_data: {},
       organization:'',
-      target_year: 0,
-      numrecords: 0,
-      running_total: 0
+      target_year: ""
     }
   },
   components: {
@@ -55,7 +51,7 @@ export default {
       //Hard-coded to retrieve 30k results.
       axios.get("https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:"+ vm.organization + "&fl=" + filters +"&rows=30000").then(function(data) {
           vm.input_data = data
-          console.log(data)
+          //console.log(data)
       })
     },
   }
