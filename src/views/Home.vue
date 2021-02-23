@@ -12,7 +12,7 @@
     <input id="target_year_1" v-model="target_year_1" type="text" />
     <br />
     <b>Enter another year to compare (e.g. 2017)</b>
-    <input id="target_year_2" v-model="target_year_2" type="text"/>
+    <input id="target_year_2" v-model="target_year_2" type="text" />
     <button v-on:click="fetch_data">Submit</button>
     <br />
     <br />
@@ -29,12 +29,12 @@
       v-bind:raw_data="input_data"
       v-bind:target_year_1="target_year_1"
     ></OrgBySectorYear>
-    <br>
+    <br />
     <OrgBySectorTwoYear
       v-bind:raw_data="input_data"
       v-bind:target_year_1="target_year_1"
       v-bind:target_year_2="target_year_2"
-      >
+    >
     </OrgBySectorTwoYear>
   </div>
 </template>
@@ -56,7 +56,7 @@ export default {
   },
   components: {
     OrgBySectorYear,
-    OrgBySectorTwoYear
+    OrgBySectorTwoYear,
   },
   methods: {
     fetch_data: function () {

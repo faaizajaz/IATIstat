@@ -1,21 +1,31 @@
 <template>
   <div>
-    <b>Comparing {{target_year_1}} with {{target_year_2}}.</b>
-    <br>
+    <b>Comparing {{ target_year_1 }} with {{ target_year_2 }}.</b>
+    <br />
     <i>Aggregated {{ numrecords }} records.</i>
-    <br>
-    <i>Total funding amount for {{ target_year_1 }}: {{ format_price(running_total_1) }}</i>
-    <br>
-    <i>Total funding amount for {{ target_year_2 }}: {{ format_price(running_total_2) }}</i>
-    <apexchart height="600" type="bar" :options="options" :series="series"></apexchart>
+    <br />
+    <i
+      >Total funding amount for {{ target_year_1 }}:
+      {{ format_price(running_total_1) }}</i
+    >
+    <br />
+    <i
+      >Total funding amount for {{ target_year_2 }}:
+      {{ format_price(running_total_2) }}</i
+    >
+    <apexchart
+      height="600"
+      type="bar"
+      :options="options"
+      :series="series"
+    ></apexchart>
   </div>
 </template>
 
 <script>
 const isodate = require("isodate");
 export default {
-
-  name: 'OrgBySectorTwoYear',
+  name: "OrgBySectorTwoYear",
   props: {
     raw_data: {
       type: Object,
@@ -28,9 +38,9 @@ export default {
     target_year_2: {
       type: String,
       default: "",
-    }
+    },
   },
-  data () {
+  data() {
     return {
       options: {
         chart: {
@@ -64,18 +74,18 @@ export default {
       },
       series: [
         {
-          name: 'Year 1',
+          name: "Year 1",
           data: [],
         },
         {
-          name: 'Year 2',
+          name: "Year 2",
           data: [],
-        }
+        },
       ],
       running_total_1: 0,
       running_total_2: 0,
       numrecords: 0,
-    }
+    };
   },
   watch: {
     raw_data: {
@@ -129,7 +139,12 @@ export default {
               // Then check to see if an transactions were in the target year
               //console.log(curr_transaction_years)
               if (
-                curr_transaction_years.includes(parseInt(this.target_year_1, 10)) || curr_transaction_years.includes(parseInt(this.target_year_2, 10))
+                curr_transaction_years.includes(
+                  parseInt(this.target_year_1, 10)
+                ) ||
+                curr_transaction_years.includes(
+                  parseInt(this.target_year_2, 10)
+                )
               ) {
                 // increment tally of records aggregated
                 this.numrecords += 1;
@@ -141,14 +156,16 @@ export default {
                   // Get the sum of all transactions in the target year
                   let transaction_sum_1 = this.sum_transactions(
                     curr_transaction_value,
-                    curr_transaction_date, this.target_year_1
+                    curr_transaction_date,
+                    this.target_year_1
                   );
                   //console.log(transaction_sum_1)
                   //console.log(transaction_sum_2)
                   let transaction_sum_2 = this.sum_transactions(
                     curr_transaction_value,
                     curr_transaction_date,
-                    this.target_year_2)
+                    this.target_year_2
+                  );
                   // add it to total for sector
                   let res_1 = series_1[a] + transaction_sum_1;
                   series_1[a] = res_1;
@@ -203,7 +220,7 @@ export default {
             {
               name: this.target_year_2,
               data: series_2,
-            }
+            },
           ];
           this.options = {
             ...this.options,
@@ -239,16 +256,15 @@ export default {
       } catch (e) {
         //console.log("Couldn;t sum")
         return 0;
-
       }
       return sum;
     },
     format_price: function (value) {
-      let val = (value/1).toFixed(2).replace(',', '.')
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    }
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
   },
-}
+};
 </script>
 
 <style lang="css" scoped></style>

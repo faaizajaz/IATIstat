@@ -1,6 +1,9 @@
 <template>
   <div>
-    <i>Total funding amount for {{ target_year_1 }}: {{ format_price(running_total) }}</i>
+    <i
+      >Total funding amount for {{ target_year_1 }}:
+      {{ format_price(running_total) }}</i
+    >
     <br />
     <i>Aggregated {{ numrecords }} records.</i>
     <apexchart
@@ -118,7 +121,9 @@ export default {
             if (typeof curr_transaction_years !== "undefined") {
               // Then check to see if an transactions were in the target year
               if (
-                curr_transaction_years.includes(parseInt(this.target_year_1, 10))
+                curr_transaction_years.includes(
+                  parseInt(this.target_year_1, 10)
+                )
               ) {
                 // increment tally of records aggregated
                 this.numrecords += 1;
@@ -202,9 +207,9 @@ export default {
       return sum;
     },
     format_price: function (value) {
-      let val = (value/1).toFixed(2).replace(',', '.')
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-    }
+      let val = (value / 1).toFixed(2).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
   },
 };
 </script>
