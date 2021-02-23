@@ -3,6 +3,10 @@
     <b>Comparing {{target_year_1}} with {{target_year_2}}.</b>
     <br>
     <i>Aggregated {{ numrecords }} records.</i>
+    <br>
+    <i>Total funding amount for {{ target_year_1 }}: {{ format_price(running_total_1) }}</i>
+    <br>
+    <i>Total funding amount for {{ target_year_2 }}: {{ format_price(running_total_2) }}</i>
     <apexchart height="600" type="bar" :options="options" :series="series"></apexchart>
   </div>
 </template>
@@ -239,6 +243,10 @@ export default {
       }
       return sum;
     },
+    format_price: function (value) {
+      let val = (value/1).toFixed(2).replace(',', '.')
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
   },
 }
 </script>
