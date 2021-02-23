@@ -17,9 +17,11 @@
 
 <script>
 const isodate = require("isodate");
+import { chartHelpers } from "../mixins/chartHelpers.js";
 
 export default {
   name: "OrgBySectorYear",
+  mixins: [chartHelpers],
   props: {
     raw_data: {
       type: Object,
@@ -137,6 +139,7 @@ export default {
                     curr_transaction_date,
                     this.target_year_1
                   );
+                  //console.log(this.sum_transactions)
                   // add it to total for sector
                   let res = newseries[a] + transaction_sum;
                   newseries[a] = res;
@@ -189,26 +192,6 @@ export default {
           //console.log(e)
         }
       },
-    },
-  },
-  methods: {
-    sum_transactions: function (values, dates, target) {
-      let sum = 0;
-      //catch instances where transaction value are undefined
-      try {
-        for (let i = 0; i < values.length; i++) {
-          if (isodate(dates[i]).getFullYear() == parseInt(target, 10)) {
-            sum += values[i];
-          }
-        }
-      } catch (e) {
-        return 0;
-      }
-      return sum;
-    },
-    format_price: function (value) {
-      let val = (value / 1).toFixed(2).replace(",", ".");
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
   },
 };
