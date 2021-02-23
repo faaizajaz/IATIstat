@@ -1,6 +1,6 @@
 const isodate = require("isodate");
 
-export const chartHelpers = {
+export const dataHelpers = {
   methods: {
     sum_transactions: function (values, dates, target) {
       let sum = 0;
@@ -16,10 +16,6 @@ export const chartHelpers = {
         return 0;
       }
       return sum;
-    },
-    format_price: function (value) {
-      let val = (value / 1).toFixed(2).replace(",", ".");
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
   },
 };

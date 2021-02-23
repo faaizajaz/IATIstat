@@ -24,11 +24,12 @@
 
 <script>
 const isodate = require("isodate");
-import { chartHelpers } from "../mixins/chartHelpers.js";
+import { viewHelpers } from "../mixins/viewHelpers.js";
+import { dataHelpers } from "../mixins/dataHelpers.js";
 
 export default {
   name: "OrgBySectorTwoYear",
-  mixins: [chartHelpers],
+  mixins: [viewHelpers, dataHelpers],
   props: {
     raw_data: {
       type: Object,
