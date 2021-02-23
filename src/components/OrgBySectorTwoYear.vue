@@ -1,22 +1,17 @@
 <template>
   <div>
-    <i>Total funding amount for {{ target_year_1 }}: {{ running_total }}</i>
-    <br />
+    <b>Comparing {{target_year_1}} with {{target_year_2}}.</b>
+    <br>
     <i>Aggregated {{ numrecords }} records.</i>
-    <apexchart
-      height="600"
-      type="bar"
-      :options="options"
-      :series="series"
-    ></apexchart>
+    <apexchart height="600" type="bar" :options="options" :series="series"></apexchart>
   </div>
 </template>
 
 <script>
 const isodate = require("isodate");
-
 export default {
-  name: "OrgBySectorYear",
+
+  name: 'OrgBySectorTwoYear',
   props: {
     raw_data: {
       type: Object,
@@ -26,9 +21,12 @@ export default {
       type: String,
       default: "",
     },
+    target_year_2: {
+      type: String,
+      default: "",
+    }
   },
-
-  data() {
+  data () {
     return {
       options: {
         chart: {
@@ -62,12 +60,18 @@ export default {
       },
       series: [
         {
+          name: 'Year 1',
           data: [],
         },
+        {
+          name: 'Year 2',
+          data: [],
+        }
       ],
-      running_total: 0,
+      running_total_1: 0,
+      running_total_2: 0,
       numrecords: 0,
-    };
+    }
   },
   watch: {
     raw_data: {
@@ -75,8 +79,10 @@ export default {
       immediate: true,
       handler: function () {
         this.numrecords = 0;
-        this.running_total = 0;
-        let newseries = [];
+        this.running_total_1 = 0;
+        this.running_total_2 = 0;
+        let series_1 = [];
+        let series_2 = [];
         let newcategories = [];
         try {
           for (let i = 0; i < this.raw_data.data.response.docs.length; i++) {
@@ -117,25 +123,37 @@ export default {
             // Make sure array fo transaction years isnt undefined
             if (typeof curr_transaction_years !== "undefined") {
               // Then check to see if an transactions were in the target year
+              //console.log(curr_transaction_years)
               if (
-                curr_transaction_years.includes(parseInt(this.target_year_1, 10))
+                curr_transaction_years.includes(parseInt(this.target_year_1, 10)) || curr_transaction_years.includes(parseInt(this.target_year_2, 10))
               ) {
                 // increment tally of records aggregated
                 this.numrecords += 1;
+                //console.log(this.sum_transactions(curr_transaction_value,curr_transaction_date,target_year_1))
                 // Check if the current activity's sector is already in the array of sectors
                 if (newcategories.includes(curr_sector_name)) {
                   // If it is, check the index of the sector
                   let a = newcategories.indexOf(curr_sector_name);
                   // Get the sum of all transactions in the target year
-                  let transaction_sum = this.sum_transactions(
+                  let transaction_sum_1 = this.sum_transactions(
                     curr_transaction_value,
-                    curr_transaction_date
+                    curr_transaction_date, this.target_year_1
                   );
+                  //console.log(transaction_sum_1)
+                  //console.log(transaction_sum_2)
+                  let transaction_sum_2 = this.sum_transactions(
+                    curr_transaction_value,
+                    curr_transaction_date,
+                    this.target_year_2)
                   // add it to total for sector
-                  let res = newseries[a] + transaction_sum;
-                  newseries[a] = res;
+                  let res_1 = series_1[a] + transaction_sum_1;
+                  series_1[a] = res_1;
                   //add it to running total
-                  this.running_total += transaction_sum;
+                  this.running_total_1 += transaction_sum_1;
+
+                  let res_2 = series_2[a] + transaction_sum_2;
+                  series_2[a] = res_2;
+                  this.running_total_2 += transaction_sum_2;
                 }
                 // Else if the sector is new
                 else {
@@ -145,16 +163,25 @@ export default {
                   // If there is no transaction value for the current record
                   if (typeof curr_transaction_value == "undefined") {
                     // make the initial value 0
-                    newseries.push(0);
+                    series_1.push(0);
+                    series_2.push(0);
                   } else {
                     // Otherwise add the transaction value to the total
-                    let transaction_sum = this.sum_transactions(
+                    let transaction_sum_1 = this.sum_transactions(
                       curr_transaction_value,
-                      curr_transaction_date
+                      curr_transaction_date,
+                      this.target_year_1
                     );
-                    newseries.push(transaction_sum);
+                    let transaction_sum_2 = this.sum_transactions(
+                      curr_transaction_value,
+                      curr_transaction_date,
+                      this.target_year_2
+                    );
+                    series_1.push(transaction_sum_1);
+                    series_2.push(transaction_sum_2);
                     // And add to the running total
-                    this.running_total += transaction_sum;
+                    this.running_total_1 += transaction_sum_1;
+                    this.running_total_2 += transaction_sum_2;
                   }
                 }
               }
@@ -162,10 +189,17 @@ export default {
           }
           // Now update the chart data
           // REMEMBER: You can't do vm.options.xaxis.categories = newcategories for some reason. The WHOLE OBJECT needs to be updated.
+          //console.log(series_1)
+          //console.log(series_2)
           this.series = [
             {
-              data: newseries,
+              name: this.target_year_1,
+              data: series_1,
             },
+            {
+              name: this.target_year_2,
+              data: series_2,
+            }
           ];
           this.options = {
             ...this.options,
@@ -185,23 +219,28 @@ export default {
     },
   },
   methods: {
-    sum_transactions: function (values, dates) {
-      let vm = this;
+    sum_transactions: function (values, dates, target) {
       let sum = 0;
+      //console.log("entered sum fxn 2")
+      //console.log(target)
+
       //catch instances where transaction value are undefined
       try {
         for (let i = 0; i < values.length; i++) {
-          if (isodate(dates[i]).getFullYear() == parseInt(vm.target_year_1, 10)) {
+          if (isodate(dates[i]).getFullYear() == parseInt(target, 10)) {
             sum += values[i];
+            //console.log("trying to sum")
           }
         }
       } catch (e) {
+        //console.log("Couldn;t sum")
         return 0;
+
       }
       return sum;
     },
   },
-};
+}
 </script>
 
 <style lang="css" scoped></style>

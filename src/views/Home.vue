@@ -9,8 +9,10 @@
     />
     <br />
     <b>Enter a year (e.g. 2017)</b>
-    <input id="target_year" v-model="target_year" type="text" />
+    <input id="target_year_1" v-model="target_year_1" type="text" />
     <br />
+    <b>Enter another year to compare (e.g. 2017)</b>
+    <input id="target_year_2" v-model="target_year_2" type="text"/>
     <button v-on:click="fetch_data">Submit</button>
     <br />
     <br />
@@ -25,14 +27,22 @@
     </p>
     <OrgBySectorYear
       v-bind:raw_data="input_data"
-      v-bind:target_year="target_year"
+      v-bind:target_year_1="target_year_1"
     ></OrgBySectorYear>
+    <br>
+    <OrgBySectorTwoYear
+      v-bind:raw_data="input_data"
+      v-bind:target_year_1="target_year_1"
+      v-bind:target_year_2="target_year_2"
+      >
+    </OrgBySectorTwoYear>
   </div>
 </template>
 
 <script>
 const axios = require("axios");
 import OrgBySectorYear from "../components/OrgBySectorYear";
+import OrgBySectorTwoYear from "../components/OrgBySectorTwoYear";
 
 export default {
   name: "Home",
@@ -40,11 +50,13 @@ export default {
     return {
       input_data: {},
       organization: "",
-      target_year: "",
+      target_year_1: "",
+      target_year_2: "",
     };
   },
   components: {
     OrgBySectorYear,
+    OrgBySectorTwoYear
   },
   methods: {
     fetch_data: function () {
