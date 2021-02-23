@@ -129,7 +129,8 @@ export default {
                   // Get the sum of all transactions in the target year
                   let transaction_sum = this.sum_transactions(
                     curr_transaction_value,
-                    curr_transaction_date
+                    curr_transaction_date,
+                    this.target_year_1
                   );
                   // add it to total for sector
                   let res = newseries[a] + transaction_sum;
@@ -150,7 +151,8 @@ export default {
                     // Otherwise add the transaction value to the total
                     let transaction_sum = this.sum_transactions(
                       curr_transaction_value,
-                      curr_transaction_date
+                      curr_transaction_date,
+                      this.target_year_1
                     );
                     newseries.push(transaction_sum);
                     // And add to the running total
@@ -185,13 +187,12 @@ export default {
     },
   },
   methods: {
-    sum_transactions: function (values, dates) {
-      let vm = this;
+    sum_transactions: function (values, dates, target) {
       let sum = 0;
       //catch instances where transaction value are undefined
       try {
         for (let i = 0; i < values.length; i++) {
-          if (isodate(dates[i]).getFullYear() == parseInt(vm.target_year_1, 10)) {
+          if (isodate(dates[i]).getFullYear() == parseInt(target, 10)) {
             sum += values[i];
           }
         }
