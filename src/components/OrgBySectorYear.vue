@@ -32,10 +32,10 @@ export default {
       type: String,
       default: "",
     },
-    group_sectors : {
+    group_sectors: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   data() {
@@ -107,8 +107,7 @@ export default {
               var curr_sector_code = JSON.parse(
                 this.raw_data.data.response.docs[i].sector
               ).sector.code;
-              var curr_sector_cat = this.sector_code_to_cat(curr_sector_code)
-
+              var curr_sector_cat = this.sector_code_to_cat(curr_sector_code);
 
               //console.log(curr_sector_name)
             } catch (e) {
