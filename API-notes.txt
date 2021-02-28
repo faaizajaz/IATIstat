@@ -23,8 +23,8 @@ todo
 
 - make helpre function to convert sectors list to sector categories list - DONE
 - Make prop to choose between grouped or ungrouped sectors - DONE
-- modify main org sector component to take arbitrary number of target years
-- modify home component to pass list of target dates as props
+- modify main org sector component to take arbitrary number of target years - DONE
+- modify home component to pass list of target dates as props - DONE
 
 now i can pass a bunch of years as argument and get it back either by category or sector
 
