@@ -181,13 +181,12 @@ export default {
             for (let year in target_years_array) {
               let tmp = {
                 name: target_years_array[year],
-                data: newseries[target_years_array[year]]
-              }
-              this.series.push(tmp)
+                data: newseries[target_years_array[year]],
+              };
+              this.series.push(tmp);
             }
-
           } catch (e) {
-            console.log(e)
+            console.log(e);
           }
         } catch (e) {
           console.log(

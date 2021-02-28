@@ -11,6 +11,9 @@
     <b>Enter years separated by commas (e.g. 2017,2018,2019)</b>
     <input id="target_years" v-model="target_years" type="text" />
     <br />
+    <b>Group sectors by IATI category? </b>
+    <input type="checkbox" value="test" v-model="group_sectors" />
+    <br />
     <button v-on:click="fetch_data">Submit</button>
     <br />
     <br />
@@ -26,7 +29,7 @@
     <OrgBySectorYearOptions
       v-bind:raw_data="input_data"
       v-bind:target_years="target_years"
-      v-bind:group_sectors="false"
+      v-bind:group_sectors="group_sectors"
     ></OrgBySectorYearOptions>
   </div>
 </template>
@@ -43,6 +46,7 @@ export default {
       input_data: {},
       organization: "",
       target_years: "",
+      group_sectors: false,
     };
   },
   components: {
