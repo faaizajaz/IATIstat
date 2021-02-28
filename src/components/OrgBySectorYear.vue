@@ -92,23 +92,7 @@ export default {
             let curr_transaction_date = this.raw_data.data.response.docs[i]
               .transaction_value_date;
             // Create a new array with only transaction years
-            let curr_transaction_years = [];
-            // First check that transaction date array is not undefined
-            if (typeof curr_transaction_date !== "undefined") {
-              // then, loop through the transaction dates array
-              for (let z = 0; z < curr_transaction_date.length; z++) {
-                try {
-                  // and populate the years array with the 4-digit years of all transactions
-                  curr_transaction_years.push(
-                    isodate(curr_transaction_date[z]).getFullYear()
-                  );
-                  // Catch typerror thrown by isodate, because I'm bad at JS
-                } catch (e) {
-                  console.log(e);
-                  continue;
-                }
-              }
-            }
+            let curr_transaction_years = this.make_years(curr_transaction_date);
             // Need to catch exception in case of JSON.parse throwing typerror
             try {
               // Get the sector name of the current ativity
