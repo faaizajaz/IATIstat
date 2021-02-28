@@ -1,6 +1,6 @@
 const isodate = require("isodate");
 const axios = require("axios");
-import sector_codelist from "../../iatidata/sector-codelist.json"
+import sector_codelist from "../../iatidata/sector-codelist.json";
 
 export const dataHelpers = {
   methods: {
@@ -19,7 +19,7 @@ export const dataHelpers = {
       }
       return sum;
     },
-/*    // Options:
+    /*    // Options:
     //    - group sectors into categories
     make_series: function (raw_data, target_years, transaction_type, options) {
       // Get the codelist for sector categories
@@ -54,7 +54,7 @@ export const dataHelpers = {
 
     make_years: function (dates) {
       let years = [];
-      if (typeof dates !== 'undefined') {
+      if (typeof dates !== "undefined") {
         for (let i = 0; i < dates.length; i++) {
           try {
             years.push(isodate(dates[i]).getFullYear());
@@ -69,18 +69,15 @@ export const dataHelpers = {
     },
 
     sector_code_to_cat: function (sector_code) {
-
-        let sector_cat_code = sector_code.substring(0,3);
-        for (let i in sector_codelist) {
-          if (sector_codelist.hasOwnProperty(i)) {
-            if (sector_cat_code == sector_codelist[i].code) {
-              return sector_codelist[i].name;
-            }
+      let sector_cat_code = sector_code.substring(0, 3);
+      for (let i in sector_codelist) {
+        if (sector_codelist.hasOwnProperty(i)) {
+          if (sector_cat_code == sector_codelist[i].code) {
+            return sector_codelist[i].name;
           }
         }
-        return "Sector code not in codelist"
-    }
-
+      }
+      return "Sector code not in codelist";
+    },
   },
 };
-
