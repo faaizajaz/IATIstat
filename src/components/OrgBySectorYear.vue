@@ -32,6 +32,10 @@ export default {
       type: String,
       default: "",
     },
+    group_sectors : {
+      type: Boolean,
+      default: false
+    }
   },
 
   data() {
@@ -99,11 +103,27 @@ export default {
               var curr_sector_name = JSON.parse(
                 this.raw_data.data.response.docs[i].sector
               ).sector.name;
+              var curr_sector_code = JSON.parse(
+                this.raw_data.data.response.docs[i].sector
+              ).sector.code;
+              var curr_sector_cat = this.sector_code_to_cat(curr_sector_code)
+
+
               //console.log(curr_sector_name)
             } catch (e) {
               // Skip to next item if error
               continue;
             }
+
+            //console.log("getting here");
+            let curr_sector = "";
+            if (this.group_sectors === true) {
+              curr_sector = curr_sector_cat;
+            } else {
+              curr_sector = curr_sector_name;
+            }
+            //console.log(curr_sector);
+
             // Make sure array fo transaction years isnt undefined
             if (typeof curr_transaction_years !== "undefined") {
               // Then check to see if an transactions were in the target year
@@ -115,9 +135,9 @@ export default {
                 // increment tally of records aggregated
                 this.numrecords += 1;
                 // Check if the current activity's sector is already in the array of sectors
-                if (newcategories.includes(curr_sector_name)) {
+                if (newcategories.includes(curr_sector)) {
                   // If it is, check the index of the sector
-                  let a = newcategories.indexOf(curr_sector_name);
+                  let a = newcategories.indexOf(curr_sector);
                   // Get the sum of all transactions in the target year
                   let transaction_sum = this.sum_transactions(
                     curr_transaction_value,
@@ -134,7 +154,7 @@ export default {
                 // Else if the sector is new
                 else {
                   // Add the sector to the sectors array
-                  newcategories.push(curr_sector_name);
+                  newcategories.push(curr_sector);
                   //console.log(newcategories)
                   // If there is no transaction value for the current record
                   if (typeof curr_transaction_value == "undefined") {

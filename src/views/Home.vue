@@ -28,6 +28,7 @@
     <OrgBySectorYear
       v-bind:raw_data="input_data"
       v-bind:target_year_1="target_year_1"
+      v-bind:group_sectors="false"
     ></OrgBySectorYear>
     <br />
     <OrgBySectorTwoYear
