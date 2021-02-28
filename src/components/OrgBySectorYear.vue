@@ -89,6 +89,7 @@ export default {
         let newseries = [];
         let newcategories = [];
         try {
+          console.log("start");
           for (let i = 0; i < this.raw_data.data.response.docs.length; i++) {
             // get arrays of transaction values and dates for current record
             let curr_transaction_value = this.raw_data.data.response.docs[i]
@@ -190,6 +191,7 @@ export default {
               },
             },
           };
+          console.log("stop");
         } catch (e) {
           console.log(
             "An error was thrown. Probably because there is no input data"
