@@ -21,7 +21,8 @@ More interesting analysis:
 
 todo
 
-- make helpre function to convert sectors list to sector categories list
+- make helpre function to convert sectors list to sector categories list - DONE
+- Make prop to choose between grouped or ungrouped sectors - DONE
 - modify main org sector component to take arbitrary number of target years
 - modify home component to pass list of target dates as props
 
