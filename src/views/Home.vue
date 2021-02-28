@@ -25,25 +25,19 @@
       <br />
       <br />
     </p>
-    <OrgBySectorYear
+    <OrgBySectorYearOptions
       v-bind:raw_data="input_data"
       v-bind:target_year_1="target_year_1"
       v-bind:group_sectors="false"
-    ></OrgBySectorYear>
-    <br />
-    <OrgBySectorTwoYear
-      v-bind:raw_data="input_data"
-      v-bind:target_year_1="target_year_1"
-      v-bind:target_year_2="target_year_2"
-    >
-    </OrgBySectorTwoYear>
+    ></OrgBySectorYearOptions>
   </div>
 </template>
 
 <script>
 const axios = require("axios");
-import OrgBySectorYear from "../components/OrgBySectorYear";
-import OrgBySectorTwoYear from "../components/OrgBySectorTwoYear";
+//import OrgBySectorYear from "../components/OrgBySectorYear";
+//import OrgBySectorTwoYear from "../components/OrgBySectorTwoYear";
+import OrgBySectorYearOptions from "../components/OrgBySectorYearOptions";
 
 export default {
   name: "Home",
@@ -56,8 +50,9 @@ export default {
     };
   },
   components: {
-    OrgBySectorYear,
-    OrgBySectorTwoYear,
+    /*OrgBySectorYear,
+    OrgBySectorTwoYear,*/
+    OrgBySectorYearOptions
   },
   methods: {
     fetch_data: function () {
@@ -80,7 +75,7 @@ export default {
         )
         .then(function (data) {
           vm.input_data = data;
-          //console.log(data)
+          console.log(data)
         });
     },
   },
