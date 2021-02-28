@@ -1,5 +1,6 @@
 const isodate = require("isodate");
 const axios = require("axios");
+import sector_codelist from "../../iatidata/sector-codelist.json"
 
 export const dataHelpers = {
   methods: {
@@ -66,6 +67,17 @@ export const dataHelpers = {
       }
       return years;
     },
+
+    sector_code_to_cat: function (sector_code) {
+      let sector_cat_code = sector_code.substring(0,3);
+      for (let i in sector_codelist) {
+        if (sector_codelist.hasOwnProperty(i)) {
+          if (sector_cat_code == sector_codelist[i].code) {
+            return sector_codelist[i].name;
+          }
+        }
+      }
+    }
 
   },
 };
