@@ -30,6 +30,7 @@
       v-bind:raw_data="input_data"
       v-bind:target_years="target_years"
       v-bind:group_sectors="group_sectors"
+      v-bind:refresh_chart="refresh_chart"
     ></OrgBySectorYearOptions>
   </div>
 </template>
@@ -47,6 +48,8 @@ export default {
       organization: "",
       target_years: "",
       group_sectors: false,
+      current_org: "",
+      refresh_chart: true,
     };
   },
   components: {
@@ -55,6 +58,9 @@ export default {
   },
   methods: {
     fetch_data: function () {
+      //console.log("timeout")
+      setTimeout(() => {this.refresh_chart=false;}, 100);
+      this.refresh_chart=false;
       // number of records aggregated
       this.numrecords = 0;
       // running total of total transaction value for the period
@@ -64,18 +70,27 @@ export default {
       //because we have a scope inside this function
       let vm = this;
       //Hard-coded to retrieve 30k results.
-      axios
-        .get(
-          "https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:" +
-            vm.organization +
-            "&fl=" +
-            filters +
-            "&rows=30000"
-        )
-        .then(function (data) {
-          vm.input_data = data;
-          console.log(data);
-        });
+      if (vm.current_org !== vm.organization) {
+        axios
+          .get(
+            "https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:" +
+              vm.organization +
+              "&fl=" +
+              filters +
+              "&rows=30000"
+          )
+          .then(function (data) {
+            console.log("Fetched API data");
+            vm.input_data = data;
+            vm.current_org = vm.organization;
+            vm.refresh_chart = true;
+            //console.log(data);
+          });
+      } else {
+        //vm.refresh_chart=false;
+        vm.refresh_chart = true;
+        console.log("Same data.")
+      }
     },
   },
 };

@@ -12,6 +12,7 @@
       :options="options"
       :series="series"
     ></apexchart>
+    <b>{{ refresh_chart }}</b>
   </div>
 </template>
 
@@ -36,6 +37,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    refresh_chart: {
+      type: Boolean,
+      default: false,
+    }
   },
 
   data() {
@@ -53,6 +58,9 @@ export default {
               pan: true,
               reset: true,
             },
+          },
+          animations: {
+            enabled: false,
           },
         },
         dataLabels: {
@@ -76,9 +84,9 @@ export default {
     };
   },
   watch: {
-    raw_data: {
-      deep: true,
-      immediate: true,
+    check_for_update: {
+      //deep: true,
+      //immediate: true,
       handler: function () {
         this.numrecords = 0;
         this.running_total = 0;
@@ -194,9 +202,15 @@ export default {
           );
           //console.log(e)
         }
+        //this.refresh_chart=false;
       },
     },
   },
+  computed: {
+    check_for_update() {
+      return this.refresh_chart;
+    }
+  }
 };
 </script>
 
