@@ -60,7 +60,7 @@ export default {
     fetch_data: function () {
       //console.log("timeout")
       setTimeout(() => {this.refresh_chart=false;}, 100);
-      this.refresh_chart=false;
+      //this.refresh_chart=false;
       // number of records aggregated
       this.numrecords = 0;
       // running total of total transaction value for the period
