@@ -12,7 +12,6 @@
       :options="options"
       :series="series"
     ></apexchart>
-    <b>{{ refresh_chart }}</b>
   </div>
 </template>
 
