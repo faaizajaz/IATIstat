@@ -4,33 +4,19 @@
       <nav class="col-md-2 d-none d-md-block bg-light sidebar">
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">
-                <span data-feather="home"></span>
-                Dashboard <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file"></span>
-                Orders
-              </a>
-            </li>
             <Inputs @query="get_query($event)"></Inputs>
           </ul>
         </div>
       </nav>
       <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-        <div
-          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom"
-        >
+
           <OrgBySectorYearOptions
             v-bind:raw_data="input_data"
             v-bind:refresh_chart="refresh_chart"
             v-bind:target_years="query.target_years"
             v-bind:group_sectors="query.group_sectors"
           ></OrgBySectorYearOptions>
-        </div>
+
         <div></div>
       </main>
     </div>
@@ -49,7 +35,6 @@ export default {
     return {
       input_data: {},
       organization: "",
-      current_org: "",
       refresh_chart: true,
       query: "",
     };

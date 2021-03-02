@@ -7,7 +7,6 @@
     <br />
     <i>Aggregated {{ numrecords }} records.</i>
     <apexchart
-      width="1200px"
       type="bar"
       :options="options"
       :series="series"
@@ -46,6 +45,7 @@ export default {
     return {
       options: {
         chart: {
+          width: '100%',
           id: "fundingbarchart",
           toolbar: {
             show: true,
