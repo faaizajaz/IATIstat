@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div id="app" class="container-fluid">
     <div class="row">
       <nav class="col-md-2 d-none d-md-block bg-light sidebar">
         <div class="sidebar-sticky">
@@ -9,13 +9,11 @@
         </div>
       </nav>
       <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-
-          <OrgBySectorYearOptions
-            v-bind:raw_data="input_data"
+        <router-view v-bind:raw_data="input_data"
             v-bind:refresh_chart="refresh_chart"
             v-bind:target_years="query.target_years"
-            v-bind:group_sectors="query.group_sectors"
-          ></OrgBySectorYearOptions>
+            v-bind:group_sectors="query.group_sectors">
+          </router-view>
 
         <div></div>
       </main>
@@ -26,7 +24,7 @@
 <script>
 const axios = require("axios");
 //import OrgBySectorYear from "../components/OrgBySectorYear";
-import OrgBySectorYearOptions from "../components/OrgBySectorYearOptions";
+//import OrgBySectorYearOptions from "../components/OrgBySectorYearOptions";
 import Inputs from "../components/Inputs";
 
 export default {
@@ -42,7 +40,7 @@ export default {
   components: {
     /*OrgBySectorYear,*/
     Inputs,
-    OrgBySectorYearOptions,
+
   },
   methods: {
     get_query(query) {
