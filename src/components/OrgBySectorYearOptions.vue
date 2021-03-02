@@ -7,7 +7,7 @@
     <br />
     <i>Aggregated {{ numrecords }} records.</i>
     <apexchart
-      height="600"
+      width="1200px"
       type="bar"
       :options="options"
       :series="series"
@@ -39,7 +39,7 @@ export default {
     refresh_chart: {
       type: Boolean,
       default: false,
-    }
+    },
   },
 
   data() {
@@ -208,8 +208,8 @@ export default {
   computed: {
     check_for_update() {
       return this.refresh_chart;
-    }
-  }
+    },
+  },
 };
 </script>
 

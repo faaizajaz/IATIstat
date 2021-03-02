@@ -1,37 +1,39 @@
 <template>
-  <div class="home">
-    <b>Enter an organization code: </b>
-    <input
-      id="org-code"
-      v-model="organization"
-      placeholder="Enter org code"
-      type="text"
-    />
-    <br />
-    <b>Enter years separated by commas (e.g. 2017,2018,2019)</b>
-    <input id="target_years" v-model="target_years" type="text" />
-    <br />
-    <b>Group sectors by IATI category? </b>
-    <input type="checkbox" value="test" v-model="group_sectors" />
-    <br />
-    <button v-on:click="fetch_data">Submit</button>
-    <br />
-    <br />
-    <p>
-      <b>Example org codes:</b>
-      <br />
-      <i>GB-GOV-1</i>: FCDO
-      <br />
-      <i>XM-DAC-41301</i>: FAO
-      <br />
-      <br />
-    </p>
-    <OrgBySectorYearOptions
-      v-bind:raw_data="input_data"
-      v-bind:target_years="target_years"
-      v-bind:group_sectors="group_sectors"
-      v-bind:refresh_chart="refresh_chart"
-    ></OrgBySectorYearOptions>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <div class="sidebar-sticky">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">
+                <span data-feather="home"></span>
+                Dashboard <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <span data-feather="file"></span>
+                Orders
+              </a>
+            </li>
+            <Inputs @query="get_query($event)"></Inputs>
+          </ul>
+        </div>
+      </nav>
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div
+          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom"
+        >
+          <OrgBySectorYearOptions
+            v-bind:raw_data="input_data"
+            v-bind:refresh_chart="refresh_chart"
+            v-bind:target_years="query.target_years"
+            v-bind:group_sectors="query.group_sectors"
+          ></OrgBySectorYearOptions>
+        </div>
+        <div></div>
+      </main>
+    </div>
   </div>
 </template>
 
@@ -39,6 +41,7 @@
 const axios = require("axios");
 //import OrgBySectorYear from "../components/OrgBySectorYear";
 import OrgBySectorYearOptions from "../components/OrgBySectorYearOptions";
+import Inputs from "../components/Inputs";
 
 export default {
   name: "Home",
@@ -46,20 +49,26 @@ export default {
     return {
       input_data: {},
       organization: "",
-      target_years: "",
-      group_sectors: false,
       current_org: "",
       refresh_chart: true,
+      query: "",
     };
   },
   components: {
     /*OrgBySectorYear,*/
+    Inputs,
     OrgBySectorYearOptions,
   },
   methods: {
-    fetch_data: function () {
+    get_query(query) {
+      this.query = query;
+      //console.log(e);
+      this.organization = query.organization;
+
       //console.log("timeout")
-      setTimeout(() => {this.refresh_chart=false;}, 100);
+      setTimeout(() => {
+        this.refresh_chart = false;
+      }, 100);
       //this.refresh_chart=false;
       // number of records aggregated
       this.numrecords = 0;
@@ -82,14 +91,14 @@ export default {
           .then(function (data) {
             console.log("Fetched API data");
             vm.input_data = data;
-            vm.current_org = vm.organization;
+            vm.current_org = query.organization;
             vm.refresh_chart = true;
-            //console.log(data);
+            console.log(data);
           });
       } else {
         //vm.refresh_chart=false;
         vm.refresh_chart = true;
-        console.log("Same data.")
+        console.log("Same data.");
       }
     },
   },
