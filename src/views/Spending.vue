@@ -6,7 +6,6 @@
     v-bind:target_years="target_years"
     v-bind:group_sectors="group_sectors"
   ></OrgBySectorYearOptions>
-  <b>{{ target_years }}</b>
   </div>
 </template>
 

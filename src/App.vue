@@ -5,6 +5,11 @@
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <Inputs @query="get_query($event)"></Inputs>
+            <br>
+            <li class="nav-item">
+                <router-link to="/spending"><span data-feather="home"></span>Spending</router-link>
+
+              </li>
           </ul>
         </div>
       </nav>
