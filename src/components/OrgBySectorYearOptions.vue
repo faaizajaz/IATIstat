@@ -46,7 +46,7 @@ export default {
       options: {
         chart: {
           width: '100%',
-          id: "fundingbarchart",
+          id: "sectorbarchart",
           toolbar: {
             show: true,
             tools: {
@@ -75,7 +75,7 @@ export default {
           tickPlacement: "on",
           labels: {
             formatter: function (value) {
-              let val = (value/1).toFixed(0).replace(",", ".");
+              let val = (value/1).toFixed(0);
               return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
           }
