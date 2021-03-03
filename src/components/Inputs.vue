@@ -31,7 +31,7 @@
 
 <script>
 const axios = require("axios");
-import { eventBus } from "../main";
+
 
 export default {
   name: "Inputs",
