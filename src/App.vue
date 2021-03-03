@@ -11,7 +11,7 @@
 
               </li>
               <li class="nav-item">
-                <router-link to="/spending"><span data-feather="home"></span>Spending</router-link>
+                <router-link to="/spending"><span data-feather="home"></span>Spending by sector</router-link>
 
               </li>
           </ul>

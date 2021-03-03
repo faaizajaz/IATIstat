@@ -14,7 +14,7 @@ import OrgBySectorYearOptions from "../components/OrgBySectorYearOptions"
 
 export default {
 
-  name: 'Spending',
+  name: 'SpendingBySector',
 
   components: {
     OrgBySectorYearOptions
