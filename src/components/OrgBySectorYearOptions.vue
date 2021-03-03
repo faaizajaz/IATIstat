@@ -187,6 +187,20 @@ export default {
               data: newseries,
             },
           ];*/
+
+          let sort_array = []
+          for (let y in target_years_array) {
+            sort_array.push(newseries[target_years_array[y]])
+          }
+          sort_array.push(newcategories);
+
+          let ta = this.parallel_sort(sort_array);
+
+          newcategories = ta.pop();
+
+
+
+
           this.options = {
             ...this.options,
             ...{
@@ -200,7 +214,7 @@ export default {
             for (let year in target_years_array) {
               let tmp = {
                 name: target_years_array[year],
-                data: newseries[target_years_array[year]],
+                data: ta[year],
               };
               this.series.push(tmp);
             }
@@ -311,6 +325,18 @@ export default {
               data: newseries,
             },
           ];*/
+
+
+          let sort_array = []
+          for (let y in target_years_array) {
+            sort_array.push(newseries[target_years_array[y]])
+          }
+          sort_array.push(newcategories);
+
+          let ta = this.parallel_sort(sort_array);
+
+          newcategories = ta.pop();
+
           this.options = {
             ...this.options,
             ...{
@@ -324,7 +350,7 @@ export default {
             for (let year in target_years_array) {
               let tmp = {
                 name: target_years_array[year],
-                data: newseries[target_years_array[year]],
+                data: ta[year],
               };
               this.series.push(tmp);
             }
