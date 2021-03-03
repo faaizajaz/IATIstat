@@ -5,8 +5,12 @@
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <Inputs @query="get_query($event)"></Inputs>
-            <br>
+            <hr>
             <li class="nav-item">
+                <router-link to="/"><span data-feather="home"></span>Home</router-link>
+
+              </li>
+              <li class="nav-item">
                 <router-link to="/spending"><span data-feather="home"></span>Spending</router-link>
 
               </li>
@@ -81,7 +85,7 @@ export default {
             vm.input_data = data;
             vm.current_org = query.organization;
             vm.refresh_chart = true;
-            console.log(data);
+            //console.log(data);
           });
       } else {
         //vm.refresh_chart=false;
