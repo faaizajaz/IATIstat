@@ -67,21 +67,22 @@ export default {
         },
         plotOptions: {
           bar: {
-            horizontal: true
+            horizontal: false
           }
         },
         xaxis: {
           categories: [],
           tickPlacement: "on",
+
+        },
+        yaxis: {
+          min: 0,
           labels: {
             formatter: function (value) {
               let val = (value/1).toFixed(0);
               return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
           }
-        },
-        yaxis: {
-          min: 0,
         },
 
         noData: {

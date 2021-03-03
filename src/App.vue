@@ -6,10 +6,6 @@
           <ul class="nav flex-column">
             <Inputs @query="get_query($event)"></Inputs>
             <hr>
-            <li class="nav-item">
-                <router-link to="/"><span data-feather="home"></span>Home</router-link>
-
-              </li>
               <li class="nav-item">
                 <router-link to="/spending"><span data-feather="home"></span>Spending by sector</router-link>
 
