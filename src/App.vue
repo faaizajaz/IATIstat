@@ -25,10 +25,10 @@
 const axios = require("axios");
 //import OrgBySectorYear from "../components/OrgBySectorYear";
 //import OrgBySectorYearOptions from "../components/OrgBySectorYearOptions";
-import Inputs from "../components/Inputs";
+import Inputs from "./components/Inputs";
 
 export default {
-  name: "Home",
+  name: "App",
   data: function () {
     return {
       input_data: {},

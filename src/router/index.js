@@ -1,15 +1,15 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 //import Home from "../views/Home.vue";
-import OrgBySectorYearOptions from "../components/OrgBySectorYearOptions";
+import Spending from "../views/Spending";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: OrgBySectorYearOptions,
+    name: "Spending",
+    component: Spending,
   },
 ];
 
