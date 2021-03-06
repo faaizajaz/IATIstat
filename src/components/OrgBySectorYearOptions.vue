@@ -45,6 +45,13 @@ export default {
     return {
       options: {
         chart: {
+          events: {
+            dataPointSelection: function(event, chartContext, config) {
+              console.log(config);
+              console.log("clicked");
+            }
+
+          },
           width: '100%',
           id: "sectorbarchart",
           toolbar: {
@@ -211,10 +218,12 @@ export default {
           for (let y in target_years_array) {
             sort_array.push(newseries[target_years_array[y]])
           }
+          //add categories to end of array so that they are sorted
           sort_array.push(newcategories);
 
           let ta = this.parallel_sort(sort_array);
 
+          // remove categories from series array
           newcategories = ta.pop();
 
 

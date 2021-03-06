@@ -38,6 +38,13 @@ export default {
     return {
       options: {
         chart: {
+          events: {
+            dataPointSelection: function(event, chartContext, config) {
+              console.log(config);
+              console.log("clicked");
+            }
+
+          },
           width: '100%',
           id: "countrybarchart",
           toolbar: {
@@ -84,6 +91,7 @@ export default {
       series: [],
       running_total: 0,
       numrecords: 0,
+      filter_country: ["PK", "AF"]
     };
   },
 
@@ -167,15 +175,17 @@ export default {
               }
               // Else if the sector is new
               else {
-                // Add the sector to the sectors array
-                newcategories.push(curr_country_code);
-                for (let year in target_years_array) {
-                  let q = this.sum_transactions(
-                    curr_transaction_value,
-                    curr_transaction_date,
-                    target_years_array[year]
-                  );
-                  newseries[target_years_array[year]].push(q);
+                if (this.filter_country.includes(curr_country_code)) {
+                  // Add the sector to the sectors array
+                  newcategories.push(curr_country_code);
+                  for (let year in target_years_array) {
+                    let q = this.sum_transactions(
+                      curr_transaction_value,
+                      curr_transaction_date,
+                      target_years_array[year]
+                    );
+                    newseries[target_years_array[year]].push(q);
+                  }
                 }
               }
             }
