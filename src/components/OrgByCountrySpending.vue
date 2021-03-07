@@ -1,8 +1,10 @@
 <template>
   <div>
     <b>Filter by country (e.g. PK,AF,SO)</b><input id="target_years" v-model="filter_country" type="text" />
+    <v-select multiple :options="country_array" v-model="filter_country"></v-select>
     <apexchart type="bar" :options="options" :series="series"></apexchart>
     <Table :columns="table_columns" :rows="table_rows"></Table>
+
   </div>
 </template>
 
@@ -11,12 +13,15 @@ const isodate = require("isodate");
 import { viewHelpers } from "../mixins/viewHelpers.js";
 import { dataHelpers } from "../mixins/dataHelpers.js";
 import Table from "@/components/Table";
+import 'vue-select/dist/vue-select.css';
+import vSelect  from 'vue-select'
 
 export default {
   name: "OrgByCountrySpending",
   mixins: [viewHelpers, dataHelpers],
   components: {
     Table,
+    vSelect
   },
 
   props: {
@@ -90,12 +95,14 @@ export default {
       series: [],
       running_total: 0,
       numrecords: 0,
-      filter_country: ["PK", "AF"],
+      filter_country: [],
       newcategories: [],
       table_master: {},
       target_years_array: [],
       table_columns: [],
       table_rows: [],
+      country_array: []
+
     };
   },
 
@@ -127,6 +134,8 @@ export default {
       this.table_columns = [];
       this.table_rows = [];
       this.table_master = {};
+      this.country_array=[];
+
 
       let activity_list = {};
       //make array of target years
@@ -141,7 +150,7 @@ export default {
       try {
         console.log("start country");
         for (let i = 0; i < this.raw_data.data.response.docs.length; i++) {
-          var curr_country_code = "UNDEFINED";
+          var curr_country_code = "Undefined country";
 
           let curr_transaction_value = this.raw_data.data.response.docs[i]
             .transaction_value;
@@ -167,8 +176,15 @@ export default {
           if (typeof curr_transaction_years !== "undefined") {
             // Then check to see if an transactions were in the target year
             this.numrecords += 1;
+
+            if (this.country_array.includes(curr_country_code) === false) {
+              this.country_array.push(curr_country_code)
+            }
+            //console.log(curr_country_code);
+            //console.log(this.newcategories);
             // Check if the current activity's sector is already in the array of sectors
             if (this.newcategories.includes(curr_country_code)) {
+
               // If it is, check the index of the sector
               let a = this.newcategories.indexOf(curr_country_code);
               for (let year in this.target_years_array) {
@@ -213,54 +229,120 @@ export default {
             }
             // Else if the sector is new
             else {
-              if (this.filter_country.length > 0 && this.filter_country.includes(curr_country_code)) {
-                // Add the sector to the sectors array
-                this.newcategories.push(curr_country_code);
-                for (let year in this.target_years_array) {
-                  let q = this.sum_transactions(
-                    curr_transaction_value,
-                    curr_transaction_date,
-                    this.target_years_array[year]
-                  );
-                  newseries[this.target_years_array[year]].push(q);
 
-                  if (
-                    curr_transaction_years.includes(
-                      parseInt(this.target_years_array[year]),
-                      10
-                    )
-                  ) {
-                    try {
-                      activity_list[this.target_years_array[year]].push([
-                        this.raw_data.data.response.docs[i].iati_identifier,
-                      ]);
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  } else {
-                    try {
-                      activity_list[this.target_years_array[year]].push([]);
-                    } catch (e) {
-                      console.log(e);
-                    }
-                  }
 
-                  if (q > 0) {
-                    let master_rows = {
-                      id: this.raw_data.data.response.docs[i].iati_identifier,
-                      activity_name: this.raw_data.data.response.docs[i]
-                        .title_narrative[0],
-                      //country: this.raw_data.data.response.docs[i].recipient_country_code[0],
-                      [this.target_years_array[year]]: q,
-                      value: q,
-                      country: curr_country_code,
-                    };
-                    this.table_master[this.target_years_array[year]].push(
-                      master_rows
+
+              if (this.filter_country.length > 0) {
+
+
+                if (this.filter_country.includes(curr_country_code)) {
+                  // Add the sector to the sectors array
+
+                  this.newcategories.push(curr_country_code);
+
+
+                  for (let year in this.target_years_array) {
+                    let q = this.sum_transactions(
+                      curr_transaction_value,
+                      curr_transaction_date,
+                      this.target_years_array[year]
                     );
+                    newseries[this.target_years_array[year]].push(q);
+
+                    if (
+                      curr_transaction_years.includes(
+                        parseInt(this.target_years_array[year]),
+                        10
+                      )
+                    ) {
+                      try {
+                        activity_list[this.target_years_array[year]].push([
+                          this.raw_data.data.response.docs[i].iati_identifier,
+                        ]);
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    } else {
+                      try {
+                        activity_list[this.target_years_array[year]].push([]);
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }
+
+                    if (q > 0) {
+                      let master_rows = {
+                        id: this.raw_data.data.response.docs[i].iati_identifier,
+                        activity_name: this.raw_data.data.response.docs[i]
+                          .title_narrative[0],
+                        //country: this.raw_data.data.response.docs[i].recipient_country_code[0],
+                        [this.target_years_array[year]]: q,
+                        value: q,
+                        country: curr_country_code,
+                      };
+                      this.table_master[this.target_years_array[year]].push(
+                        master_rows
+                      );
+                    }
                   }
                 }
+
+              } else {
+                // Add the sector to the sectors array
+
+                  this.newcategories.push(curr_country_code);
+
+
+
+                  for (let year in this.target_years_array) {
+                    let q = this.sum_transactions(
+                      curr_transaction_value,
+                      curr_transaction_date,
+                      this.target_years_array[year]
+                    );
+                    newseries[this.target_years_array[year]].push(q);
+
+                    if (
+                      curr_transaction_years.includes(
+                        parseInt(this.target_years_array[year]),
+                        10
+                      )
+                    ) {
+                      try {
+                        activity_list[this.target_years_array[year]].push([
+                          this.raw_data.data.response.docs[i].iati_identifier,
+                        ]);
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    } else {
+                      try {
+                        activity_list[this.target_years_array[year]].push([]);
+                      } catch (e) {
+                        console.log(e);
+                      }
+                    }
+
+                    if (q > 0) {
+                      let master_rows = {
+                        id: this.raw_data.data.response.docs[i].iati_identifier,
+                        activity_name: this.raw_data.data.response.docs[i]
+                          .title_narrative[0],
+                        //country: this.raw_data.data.response.docs[i].recipient_country_code[0],
+                        [this.target_years_array[year]]: q,
+                        value: q,
+                        country: curr_country_code,
+                      };
+                      this.table_master[this.target_years_array[year]].push(
+                        master_rows
+                      );
+                    }
+                  }
+
               }
+
+
+
             }
           }
         }
@@ -272,6 +354,9 @@ export default {
               data: newseries,
             },
           ];*/
+        //console.log(this.newcategories);
+
+        //console.log(this.country_array);
         this.options = {
           ...this.options,
           ...{
@@ -320,8 +405,8 @@ export default {
     },
 
     make_table_rows: function (seriesIndex, dataPointIndex) {
-      console.log("making table");
-      console.log(this.table_master);
+      //console.log("making table");
+      //console.log(this.table_master);
       //console.log(seriesIndex);
       //console.log(dataPointIndex);
       this.table_rows = [];
