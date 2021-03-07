@@ -11,6 +11,7 @@
       :options="options"
       :series="series"
     ></apexchart>
+    <Table :columns="table_columns" :rows="table_rows"></Table>
   </div>
 </template>
 
@@ -18,10 +19,15 @@
 const isodate = require("isodate");
 import { viewHelpers } from "../mixins/viewHelpers.js";
 import { dataHelpers } from "../mixins/dataHelpers.js";
+import Table from "@/components/Table";
+
 
 export default {
   name: "OrgBySectorYearOptions",
   mixins: [viewHelpers, dataHelpers],
+  components: {
+    Table
+  },
   props: {
     raw_data: {
       type: Object,
@@ -99,6 +105,8 @@ export default {
       series: [],
       running_total: 0,
       numrecords: 0,
+      table_columns: [],
+      table_rows: []
     };
   },
   watch: {
@@ -128,13 +136,20 @@ export default {
       this.numrecords = 0;
         this.running_total = 0;
         this.series = [];
+        this.table_columns = [];
+        this.table_rows = [];
         let newseries = {};
         let newcategories = [];
+        let activity_list = {};
         //make array of target years
         let target_years_array = this.target_years.split(",");
         for (let year in target_years_array) {
           newseries[target_years_array[year]] = [];
+          activity_list[target_years_array[year]] = [];
         }
+
+
+        console.log(this.raw_data)
 
         try {
           console.log("start");
@@ -188,6 +203,31 @@ export default {
                   );
                   let res = newseries[target_years_array[year]][a] + q;
                   newseries[target_years_array[year]][a] = res;
+
+                  if (curr_transaction_years.includes(parseInt(target_years_array[year]), 10)) {
+
+                    try {
+                      activity_list[target_years_array[year]][a].push(this.raw_data.data.response.docs[i].iati_identifier)
+                    } catch (e) {
+                      console.log(e)
+
+                    }
+                  }
+
+                  if (q > 0) {
+
+                    let table_entry = {
+                      id: this.raw_data.data.response.docs[i].iati_identifier,
+                      activity_name: this.raw_data.data.response.docs[i].title_narrative[0],
+                      //country: this.raw_data.data.response.docs[i].recipient_country_code[0],
+                      [target_years_array[year]]: q,
+
+                    }
+                    this.table_rows.push(table_entry);
+                  }
+
+
+
                 }
               }
               // Else if the sector is new
@@ -201,9 +241,54 @@ export default {
                     target_years_array[year]
                   );
                   newseries[target_years_array[year]].push(q);
+
+
+                  //MAKING ROWS FOR TABLE
+
+                console.log(curr_transaction_years);
+                console.log(typeof target_years_array[year]);
+                console.log (curr_transaction_years.includes(parseInt(target_years_array[year]), 10))
+
+                  // if sector is new, add the current activity code to list of acitivities for the sector
+                if (curr_transaction_years.includes(parseInt(target_years_array[year]), 10)) {
+
+                  try {
+                    activity_list[target_years_array[year]].push([this.raw_data.data.response.docs[i].iati_identifier])
+                  } catch (e) {
+                    console.log(e)
+
+                  }
+                } else {
+                  try {
+                    activity_list[target_years_array[year]].push([])
+                  } catch (e) {
+                    console.log(e)
+
+                  }
+
+                }
+
+                  if (q > 0) {
+
+                    let table_entry = {
+                      id: this.raw_data.data.response.docs[i].iati_identifier,
+                      activity_name: this.raw_data.data.response.docs[i].title_narrative[0],
+                      //country: this.raw_data.data.response.docs[i].recipient_country_code[0],
+                      [target_years_array[year]]: q
+
+                    }
+                    this.table_rows.push(table_entry);
+                  }
+
+
                 }
               }
             }
+
+            // MAKING TABLE ROW
+
+
+
           }
 
           // Now update the chart data
@@ -213,6 +298,8 @@ export default {
               data: newseries,
             },
           ];*/
+
+          console.log(activity_list);
 
           let sort_array = []
           for (let y in target_years_array) {
@@ -249,6 +336,34 @@ export default {
           } catch (e) {
             console.log(e);
           }
+
+
+          // MAKING TABLE COLUMNS
+          this.table_columns.push(
+          {
+            label: "Activity name",
+            field: "activity_name"
+          },
+          {
+            label: "Recipient country",
+            field: "country",
+          }
+          )
+          for (let year in target_years_array) {
+            let tmp = {
+              label: target_years_array[year],
+              field: target_years_array[year],
+              type: 'number',
+            };
+            this.table_columns.push(tmp)
+          }
+
+          // MAKING TABLE rows
+
+
+
+
+
         } catch (e) {
           console.log(
             "An error was thrown. Probably because there is no input data"
