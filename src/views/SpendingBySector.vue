@@ -1,23 +1,22 @@
 <template>
   <div>
-  <OrgBySectorYearOptions
-    v-bind:raw_data="raw_data"
-    v-bind:refresh_chart="refresh_chart"
-    v-bind:target_years="target_years"
-    v-bind:group_sectors="group_sectors"
-  ></OrgBySectorYearOptions>
+    <OrgBySectorYearOptions
+      v-bind:raw_data="raw_data"
+      v-bind:refresh_chart="refresh_chart"
+      v-bind:target_years="target_years"
+      v-bind:group_sectors="group_sectors"
+    ></OrgBySectorYearOptions>
   </div>
 </template>
 
 <script>
-import OrgBySectorYearOptions from "../components/OrgBySectorYearOptions"
+import OrgBySectorYearOptions from "../components/OrgBySectorYearOptions";
 
 export default {
-
-  name: 'SpendingBySector',
+  name: "SpendingBySector",
 
   components: {
-    OrgBySectorYearOptions
+    OrgBySectorYearOptions,
   },
 
   props: {
@@ -39,15 +38,10 @@ export default {
     },
   },
 
-
-
-  data () {
-    return {
-
-    }
-  }
-}
+  data() {
+    return {};
+  },
+};
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

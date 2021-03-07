@@ -5,24 +5,30 @@
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <Inputs @query="get_query($event)"></Inputs>
-            <hr>
-              <li class="nav-item">
-                <router-link to="/spending"><span data-feather="home"></span>Spending by sector</router-link>
-
-              </li>
-              <li class="nav-item">
-                <router-link to="/bycountry"><span data-feather="home"></span>Spending by country</router-link>
-
-              </li>
+            <hr />
+            <li class="nav-item">
+              <router-link to="/spending"
+                ><span data-feather="home"></span>Spending by
+                sector</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link to="/bycountry"
+                ><span data-feather="home"></span>Spending by
+                country</router-link
+              >
+            </li>
           </ul>
         </div>
       </nav>
       <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-        <router-view v-bind:raw_data="input_data"
-            v-bind:refresh_chart="refresh_chart"
-            v-bind:target_years="query.target_years"
-            v-bind:group_sectors="query.group_sectors">
-          </router-view>
+        <router-view
+          v-bind:raw_data="input_data"
+          v-bind:refresh_chart="refresh_chart"
+          v-bind:target_years="query.target_years"
+          v-bind:group_sectors="query.group_sectors"
+        >
+        </router-view>
 
         <div></div>
       </main>
@@ -49,7 +55,6 @@ export default {
   components: {
     /*OrgBySectorYear,*/
     Inputs,
-
   },
   methods: {
     get_query(query) {
@@ -98,7 +103,6 @@ export default {
 </script>
 
 <style>
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -171,4 +175,3 @@ export default {
   vertical-align: text-bottom;
 }
 </style>
-

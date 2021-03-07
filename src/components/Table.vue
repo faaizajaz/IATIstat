@@ -1,17 +1,19 @@
 <template>
   <div id="table">
     <b>Acitvities:</b>
-    <vue-good-table v-bind:columns="columns" v-bind:rows="rows"></vue-good-table>
+    <vue-good-table
+      v-bind:columns="columns"
+      v-bind:rows="rows"
+    ></vue-good-table>
   </div>
 </template>
 
 <script>
-import 'vue-good-table/dist/vue-good-table.css'
-import { VueGoodTable } from 'vue-good-table'
+import "vue-good-table/dist/vue-good-table.css";
+import { VueGoodTable } from "vue-good-table";
 
 export default {
-
-  name: 'Table',
+  name: "Table",
 
   components: {
     VueGoodTable,
@@ -25,7 +27,7 @@ export default {
     rows: {
       type: Array,
       default: () => [],
-    }
+    },
   },
 
   // Props:
@@ -33,13 +35,10 @@ export default {
   //        rows: Array containing list with field values [ {id:1, field1: "whatever"}, {...} ]
   // Apex dataPointSelection event triggers function that creates columns and rows and passes into table component.
 
-  data () {
-    return {
-
-    }
-  }
-}
+  data() {
+    return {};
+  },
+};
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

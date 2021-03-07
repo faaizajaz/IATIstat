@@ -23,7 +23,6 @@ const routes = [
     name: "SpendingByCountry",
     component: SpendingByCountry,
   },
-
 ];
 
 const router = new VueRouter({
