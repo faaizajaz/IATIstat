@@ -1,6 +1,6 @@
 <template>
   <div id="table">
-    <b>Table is here</b>
+    <b>Acitvities:</b>
     <vue-good-table v-bind:columns="columns" v-bind:rows="rows"></vue-good-table>
   </div>
 </template>

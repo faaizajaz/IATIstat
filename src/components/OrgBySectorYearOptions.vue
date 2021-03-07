@@ -52,9 +52,9 @@ export default {
       options: {
         chart: {
           events: {
-            dataPointSelection: function(event, chartContext, config) {
-              console.log(config);
-              console.log("clicked");
+            dataPointSelection: (event, chartContext, config) => {
+              //console.log(chartContext);
+              this.make_table_rows(config.seriesIndex, config.dataPointIndex);
             }
 
           },
@@ -106,7 +106,11 @@ export default {
       running_total: 0,
       numrecords: 0,
       table_columns: [],
-      table_rows: []
+      table_rows: [],
+      target_years_array: [],
+      newcategories:[],
+      table_master: {},
+
     };
   },
   watch: {
@@ -138,21 +142,25 @@ export default {
         this.series = [];
         this.table_columns = [];
         this.table_rows = [];
+        this.newcategories = [];
+        this.table_master={};
         let newseries = {};
-        let newcategories = [];
+
         let activity_list = {};
         //make array of target years
-        let target_years_array = this.target_years.split(",");
-        for (let year in target_years_array) {
-          newseries[target_years_array[year]] = [];
-          activity_list[target_years_array[year]] = [];
+        this.target_years_array = this.target_years.split(",");
+        for (let year in this.target_years_array) {
+          newseries[this.target_years_array[year]] = [];
+          activity_list[this.target_years_array[year]] = [];
+          this.table_master[this.target_years_array[year]] = [];
         }
 
 
-        console.log(this.raw_data)
+        //console.log(this.raw_data)
 
         try {
           console.log("start");
+          //
           for (let i = 0; i < this.raw_data.data.response.docs.length; i++) {
             var curr_sector_name = "UNDEFINED";
             var curr_sector_cat = "UNDEFINED";
@@ -192,39 +200,53 @@ export default {
               // Then check to see if an transactions were in the target year
               this.numrecords += 1;
               // Check if the current activity's sector is already in the array of sectors
-              if (newcategories.includes(curr_sector)) {
+              if (this.newcategories.includes(curr_sector)) {
                 // If it is, check the index of the sector
-                let a = newcategories.indexOf(curr_sector);
-                for (let year in target_years_array) {
+                let a = this.newcategories.indexOf(curr_sector);
+                for (let year in this.target_years_array) {
                   let q = this.sum_transactions(
                     curr_transaction_value,
                     curr_transaction_date,
-                    target_years_array[year]
+                    this.target_years_array[year]
                   );
-                  let res = newseries[target_years_array[year]][a] + q;
-                  newseries[target_years_array[year]][a] = res;
+                  let res = newseries[this.target_years_array[year]][a] + q;
+                  newseries[this.target_years_array[year]][a] = res;
 
-                  if (curr_transaction_years.includes(parseInt(target_years_array[year]), 10)) {
+                  if (curr_transaction_years.includes(parseInt(this.target_years_array[year]), 10)) {
 
                     try {
-                      activity_list[target_years_array[year]][a].push(this.raw_data.data.response.docs[i].iati_identifier)
+                      activity_list[this.target_years_array[year]][a].push(this.raw_data.data.response.docs[i].iati_identifier)
                     } catch (e) {
                       console.log(e)
 
                     }
                   }
 
-                  if (q > 0) {
 
-                    let table_entry = {
+                  // ********************** MAKING MASTER COLUMN LIST
+                if (q > 0) {
+                  let country = "";
+
+                    try{
+                      country = this.raw_data.data.response.docs[i].recipient_country_code[0]
+
+                    } catch (e) {
+                      country = "No country"
+                    }
+
+                    let master_rows = {
                       id: this.raw_data.data.response.docs[i].iati_identifier,
                       activity_name: this.raw_data.data.response.docs[i].title_narrative[0],
                       //country: this.raw_data.data.response.docs[i].recipient_country_code[0],
-                      [target_years_array[year]]: q,
+                      [this.target_years_array[year]]: q,
+                      value: q,
+                      sector: curr_sector,
+                      country: country
 
                     }
-                    this.table_rows.push(table_entry);
+                    this.table_master[this.target_years_array[year]].push(master_rows);
                   }
+                  // *************************************
 
 
 
@@ -233,34 +255,34 @@ export default {
               // Else if the sector is new
               else {
                 // Add the sector to the sectors array
-                newcategories.push(curr_sector);
-                for (let year in target_years_array) {
+                this.newcategories.push(curr_sector);
+                for (let year in this.target_years_array) {
                   let q = this.sum_transactions(
                     curr_transaction_value,
                     curr_transaction_date,
-                    target_years_array[year]
+                    this.target_years_array[year]
                   );
-                  newseries[target_years_array[year]].push(q);
+                  newseries[this.target_years_array[year]].push(q);
 
 
-                  //MAKING ROWS FOR TABLE
 
-                console.log(curr_transaction_years);
-                console.log(typeof target_years_array[year]);
-                console.log (curr_transaction_years.includes(parseInt(target_years_array[year]), 10))
+
+                //console.log(curr_transaction_years);
+                //console.log(typeof this.target_years_array[year]);
+                //console.log (curr_transaction_years.includes(parseInt(this.target_years_array[year]), 10))
 
                   // if sector is new, add the current activity code to list of acitivities for the sector
-                if (curr_transaction_years.includes(parseInt(target_years_array[year]), 10)) {
+                if (curr_transaction_years.includes(parseInt(this.target_years_array[year]), 10)) {
 
                   try {
-                    activity_list[target_years_array[year]].push([this.raw_data.data.response.docs[i].iati_identifier])
+                    activity_list[this.target_years_array[year]].push([this.raw_data.data.response.docs[i].iati_identifier])
                   } catch (e) {
                     console.log(e)
 
                   }
                 } else {
                   try {
-                    activity_list[target_years_array[year]].push([])
+                    activity_list[this.target_years_array[year]].push([])
                   } catch (e) {
                     console.log(e)
 
@@ -268,17 +290,31 @@ export default {
 
                 }
 
-                  if (q > 0) {
+                // ***************************** MAKING MASTER COLUMNS
+                if (q > 0) {
+                    let country = "";
 
-                    let table_entry = {
+                    try{
+                      country = this.raw_data.data.response.docs[i].recipient_country_code[0]
+
+                    } catch (e) {
+                      country = "No country"
+                    }
+                    let master_rows = {
                       id: this.raw_data.data.response.docs[i].iati_identifier,
                       activity_name: this.raw_data.data.response.docs[i].title_narrative[0],
                       //country: this.raw_data.data.response.docs[i].recipient_country_code[0],
-                      [target_years_array[year]]: q
+                      [this.target_years_array[year]]: q,
+                      value: q,
+                      sector: curr_sector,
+                      country: country
+
 
                     }
-                    this.table_rows.push(table_entry);
+                    this.table_master[this.target_years_array[year]].push(master_rows);
                   }
+
+                //*****************************************
 
 
                 }
@@ -292,26 +328,31 @@ export default {
           }
 
           // Now update the chart data
-          // REMEMBER: You can't do vm.options.xaxis.categories = newcategories for some reason. The WHOLE OBJECT needs to be updated.
+          // REMEMBER: You can't do vm.options.xaxis.categories = this.newcategories for some reason. The WHOLE OBJECT needs to be updated.
           /*this.series = [
             {
               data: newseries,
             },
           ];*/
 
-          console.log(activity_list);
+          //console.log(activity_list);
+          //console.log(this.table_master);
 
           let sort_array = []
-          for (let y in target_years_array) {
-            sort_array.push(newseries[target_years_array[y]])
+          for (let y in this.target_years_array) {
+            sort_array.push(newseries[this.target_years_array[y]])
           }
           //add categories to end of array so that they are sorted
-          sort_array.push(newcategories);
+          sort_array.push(this.newcategories);
+
+          // this sorts by first arg
 
           let ta = this.parallel_sort(sort_array);
 
           // remove categories from series array
-          newcategories = ta.pop();
+          this.newcategories = ta.pop();
+
+
 
 
 
@@ -320,15 +361,15 @@ export default {
             ...this.options,
             ...{
               xaxis: {
-                categories: newcategories,
+                categories: this.newcategories,
               },
             },
           };
 
           try {
-            for (let year in target_years_array) {
+            for (let year in this.target_years_array) {
               let tmp = {
-                name: target_years_array[year],
+                name: this.target_years_array[year],
                 data: ta[year],
               };
               this.series.push(tmp);
@@ -349,10 +390,10 @@ export default {
             field: "country",
           }
           )
-          for (let year in target_years_array) {
+          for (let year in this.target_years_array) {
             let tmp = {
-              label: target_years_array[year],
-              field: target_years_array[year],
+              label: this.target_years_array[year],
+              field: this.target_years_array[year],
               type: 'number',
             };
             this.table_columns.push(tmp)
@@ -368,9 +409,40 @@ export default {
           console.log(
             "An error was thrown. Probably because there is no input data"
           );
-          //console.log(e)
+          console.log(e)
         }
 
+    },
+
+    // args: index of activity clicked, activity list
+    // returns: columns array
+    // usage: after sort, table_rows = thisfunction(args)
+
+    make_table_rows: function (seriesIndex, dataPointIndex) {
+      //console.log(seriesIndex);
+      //console.log(dataPointIndex);
+      this.table_rows = [];
+      //console.log(this.target_years_array[seriesIndex]);
+      //console.log(this.newcategories[dataPointIndex]);
+      //console.log(categoriesArray);
+      //console.log(this.newcategories);
+
+      //console.log(this.table_master[this.target_years_array[seriesIndex]]);
+
+      for (let row in this.table_master[this.target_years_array[seriesIndex]]) {
+
+        if (this.table_master[this.target_years_array[seriesIndex]][row].sector == this.newcategories[dataPointIndex]) {
+
+        this.table_rows.push(this.table_master[this.target_years_array[seriesIndex]][row])
+      }
+      }
+
+      //this.table_rows.push(this.table_master[this.target_years_array[seriesIndex]])
+
+
+
+
+      return
     }
   }
 };
