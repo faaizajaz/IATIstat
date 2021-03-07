@@ -52,7 +52,7 @@ export default {
               this.make_table_rows(config.seriesIndex, config.dataPointIndex);
             },
           },
-          width: "100%",
+          width: "95%",
           id: "sectorbarchart",
           toolbar: {
             show: true,

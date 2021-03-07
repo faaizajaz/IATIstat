@@ -1,5 +1,6 @@
 <template>
   <div>
+    <b>Filter by country (e.g. PK,AF,SO)</b><input id="target_years" v-model="filter_country" type="text" />
     <apexchart type="bar" :options="options" :series="series"></apexchart>
     <Table :columns="table_columns" :rows="table_rows"></Table>
   </div>
@@ -43,7 +44,7 @@ export default {
               this.make_table_rows(config.seriesIndex, config.dataPointIndex);
             },
           },
-          width: "100%",
+          width: "95%",
           id: "countrybarchart",
           toolbar: {
             show: true,
@@ -212,7 +213,7 @@ export default {
             }
             // Else if the sector is new
             else {
-              if (this.filter_country.includes(curr_country_code)) {
+              if (this.filter_country.length > 0 && this.filter_country.includes(curr_country_code)) {
                 // Add the sector to the sectors array
                 this.newcategories.push(curr_country_code);
                 for (let year in this.target_years_array) {
