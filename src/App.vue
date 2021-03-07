@@ -67,7 +67,7 @@ export default {
       // running total of total transaction value for the period
       this.running_total = 0;
       let filters =
-        "transaction_type,transaction_value_date,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency,recipient_country_code";
+        "transaction_type,transaction_value_date,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency,recipient_country_code,iati_identifier";
       //because we have a scope inside this function
       let vm = this;
       //Hard-coded to retrieve 30k results.
