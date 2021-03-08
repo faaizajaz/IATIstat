@@ -1,7 +1,8 @@
 <template>
   <div>
-    <b>Filter by country (e.g. PK,AF,SO)</b><input id="target_years" v-model="filter_country" type="text" />
+    <b>Filter by country using the dropdown</b>
     <v-select multiple :options="country_array" v-model="filter_country"></v-select>
+    <button v-on:click="create_chart">Refresh chart</button>
     <apexchart type="bar" :options="options" :series="series"></apexchart>
     <Table :columns="table_columns" :rows="table_rows"></Table>
 

@@ -4,7 +4,11 @@
     <vue-good-table
       v-bind:columns="columns"
       v-bind:rows="rows"
+      :pagination-options="{
+    enabled: true
+  }"
     ></vue-good-table>
+    <b>{{ pagination }}</b>
   </div>
 </template>
 
@@ -36,7 +40,9 @@ export default {
   // Apex dataPointSelection event triggers function that creates columns and rows and passes into table component.
 
   data() {
-    return {};
+    return {
+
+    };
   },
 };
 </script>
