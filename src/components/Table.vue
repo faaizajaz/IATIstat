@@ -8,7 +8,7 @@
     enabled: true
   }"
     ></vue-good-table>
-    <b>{{ pagination }}</b>
+
   </div>
 </template>
 
