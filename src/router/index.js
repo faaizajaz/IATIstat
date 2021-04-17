@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import SpendingBySector from "../views/SpendingBySector";
 import SpendingByCountry from "../views/SpendingByCountry";
 import Inputs from "../components/Inputs";
+import CountryByOrgSpending from "../views/CountryByOrg";
 
 Vue.use(VueRouter);
 
@@ -22,6 +23,11 @@ const routes = [
     path: "/bycountry",
     name: "SpendingByCountry",
     component: SpendingByCountry,
+  },
+  {
+    path: "/byorgincountry",
+    name: "CountryByOrgSpending",
+    component: CountryByOrgSpending,
   },
 ];
 
