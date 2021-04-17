@@ -119,6 +119,7 @@ export default {
       let newseries = {};
       let activity_list = {};
 
+
       this.target_years_array = this.target_years.split(",");
       for (let year in this.target_years_array) {
         newseries[this.target_years_array[year]] = [];
@@ -132,6 +133,8 @@ export default {
           let curr_transaction_value = this.raw_country_data.data.response.docs[i].transaction_value;
           let curr_transaction_date=this.raw_country_data.data.response.docs[i].transaction_value_date;
           let curr_transaction_years = this.make_years(curr_transaction_date);
+
+          let curr_transaction_type = this.raw_country_data.data.response.docs[i].transaction_type;
 
           try {
             if (this.raw_country_data.data.response.docs[i].reporting_org_ref !== undefined) {
@@ -155,7 +158,7 @@ export default {
             if (this.newcategories.includes(curr_org_code)) {
               let a = this.newcategories.indexOf(curr_org_code);
               for (let year in this.target_years_array) {
-                let q = this.sum_transactions(curr_transaction_value, curr_transaction_date,this.target_years_array[year]);
+                let q = this.sum_transactions(curr_transaction_value, curr_transaction_date, curr_transaction_type,this.target_years_array[year]);
 
                 let res = newseries[this.target_years_array[year]][a] + q;
                 newseries[this.target_years_array[year]][a] = res;
@@ -177,7 +180,7 @@ export default {
                   this.newcategories.push(curr_org_code);
 
                   for (let year in this.target_years_array) {
-                    let q = this.sum_transactions(curr_transaction_value, curr_transaction_date,this.target_years_array[year]);
+                    let q = this.sum_transactions(curr_transaction_value, curr_transaction_date,curr_transaction_type,this.target_years_array[year]);
 
                     newseries[this.target_years_array[year]].push(q);
 
@@ -204,7 +207,7 @@ export default {
                 this.newcategories.push(curr_org_code);
 
                 for (let year in this.target_years_array) {
-                  let q = this.sum_transactions(curr_transaction_value,curr_transaction_date,this.target_years_array[year]);
+                  let q = this.sum_transactions(curr_transaction_value,curr_transaction_date,curr_transaction_type,this.target_years_array[year]);
                   newseries[this.target_years_array[year]].push(q);
 
                   if (curr_transaction_years.includes(parseInt(this.target_years_array[year]), 10)) {
@@ -239,6 +242,8 @@ export default {
         let ta = this.parallel_sort(sort_array);
 
         let keeper = [[]];
+
+
 
         for (let i in ta[0]) {
           let keep = false;
