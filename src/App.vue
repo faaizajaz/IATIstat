@@ -112,7 +112,7 @@ export default {
 
       if (vm.current_country !== vm.country && vm.country) {
         axios.get(
-            "https://iatidatastore.iatistandard.org/search/activity?q=(recipient_country_code:("+ vm.country +")%20OR%20transaction_recipient_country_code:("+ vm.country +"))&wt=json&fl=" + country_filters+"&rows=30000"
+            "https://iatidatastore.iatistandard.org/search/activity?q=recipient_country_code:("+ vm.country +")&wt=json&fl=" + country_filters+"&rows=30000"
           ).then(function (data) {
             console.log("Fetched country data");
             vm.country_data=data;
