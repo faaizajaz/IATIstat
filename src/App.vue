@@ -5,7 +5,7 @@
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <Inputs @query="get_query($event)"></Inputs>
-            <hr />
+            <h4><b>Organization data</b></h4>
             <li class="nav-item">
               <router-link to="/spending"
                 ><span data-feather="home"></span>Spending by
@@ -18,12 +18,21 @@
                 country</router-link
               >
             </li>
+            <br>
+            <br>
+            <h4><b>Country data</b></h4>
+            <li class="nav-item">
+              <router-link to="/byorgincountry"
+                ><span data-feather="home"></span>Spending in country</router-link
+              >
+            </li>
           </ul>
         </div>
       </nav>
       <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
         <router-view
           v-bind:raw_data="input_data"
+          v-bind:raw_country_data="country_data"
           v-bind:refresh_chart="refresh_chart"
           v-bind:target_years="query.target_years"
           v-bind:group_sectors="query.group_sectors"
@@ -47,6 +56,7 @@ export default {
   data: function () {
     return {
       input_data: {},
+      country_data: {},
       organization: "",
       refresh_chart: true,
       query: "",
@@ -61,7 +71,7 @@ export default {
       this.query = query;
       //console.log(e);
       this.organization = query.organization;
-
+      this.country = query.country;
       //console.log("timeout")
       setTimeout(() => {
         this.refresh_chart = false;
@@ -73,10 +83,12 @@ export default {
       this.running_total = 0;
       let filters =
         "transaction_type,transaction_value_date,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency,recipient_country_code,iati_identifier";
+
+      let country_filters = "transaction_type,transaction_value_date,reporting_org_ref,reporting_org_narrative,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency,recipient_country_code,iati_identifier"
       //because we have a scope inside this function
       let vm = this;
       //Hard-coded to retrieve 30k results.
-      if (vm.current_org !== vm.organization) {
+      if (vm.current_org !== vm.organization && vm.organization) {
         axios
           .get(
             "https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:" +
@@ -86,7 +98,7 @@ export default {
               "&rows=30000"
           )
           .then(function (data) {
-            console.log("Fetched API data");
+            console.log("Fetched organization data");
             vm.input_data = data;
             vm.current_org = query.organization;
             vm.refresh_chart = true;
@@ -95,7 +107,21 @@ export default {
       } else {
         //vm.refresh_chart=false;
         vm.refresh_chart = true;
-        console.log("Same data.");
+        console.log("Same org data");
+      }
+
+      if (vm.current_country !== vm.country && vm.country) {
+        axios.get(
+            "https://iatidatastore.iatistandard.org/search/activity?q=(recipient_country_code:("+ vm.country +")%20OR%20transaction_recipient_country_code:("+ vm.country +"))&wt=json&fl=" + country_filters+"&rows=30000"
+          ).then(function (data) {
+            console.log("Fetched country data");
+            vm.country_data=data;
+            vm.current_country=query.country;
+            vm.refresh_chart=true;
+          });
+      } else {
+        vm.refresh_chart=true;
+        console.log("Same country data");
       }
     },
   },

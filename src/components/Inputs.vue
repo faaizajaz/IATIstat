@@ -7,7 +7,23 @@
       placeholder="Enter org code"
       type="text"
     />
-    <br />
+    <br><br>
+    <b>OR</b>
+    <br>
+    <br>
+    <b>Enter a country code: </b>
+    <input
+      id="country-code"
+      v-model="country"
+      placeholder="Enter country code"
+      type="text"
+    />
+
+
+    <br>
+    <br>
+    <hr>
+    <br>
     <b>Enter years separated by commas (e.g. 2017,2018,2019)</b>
     <input id="target_years" v-model="target_years" type="text" />
     <br />
@@ -17,15 +33,8 @@
     <button v-on:click="send_query">Submit</button>
     <br />
     <br />
-    <p>
-      <b>Example org codes:</b>
-      <br />
-      <i>GB-GOV-1</i>: FCDO
-      <br />
-      <i>XM-DAC-41301</i>: FAO
-      <br />
-      <br />
-    </p>
+
+    <hr>
   </div>
 </template>
 
@@ -37,6 +46,7 @@ export default {
   data: function () {
     return {
       organization: "",
+      country: "",
       target_years: "",
       group_sectors: false,
     };
@@ -45,6 +55,7 @@ export default {
     send_query: function () {
       this.$emit("query", {
         organization: this.organization,
+        country: this.country,
         target_years: this.target_years,
         group_sectors: this.group_sectors,
       });
