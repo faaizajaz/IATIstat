@@ -2,9 +2,19 @@
   <div>
     <h1>Welcome to the IATI dashboard.</h1>
     <br />
+    <h3>
+      Organization data is:
     <h3 v-if="Object.keys(raw_data).length !== 0">
-      Data is loaded, you can now use the links in the sidebar to explore.
+      loaded.
     </h3>
+  </h3>
+
+  <h3>
+      Country data is:
+    <h3 v-if="Object.keys(raw_country_data).length !== 0">
+      loaded.
+    </h3>
+  </h3>
   </div>
 </template>
 
@@ -17,6 +27,11 @@ export default {
       type: Object,
       default: () => null,
     },
+    raw_country_data: {
+      type: Object,
+      default: () => null,
+    },
+
   },
 
   data() {
