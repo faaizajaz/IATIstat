@@ -212,6 +212,7 @@ export default {
                   }
                 }
 
+                //TABLE STUFF
                 if (q > 0) {
                   let master_rows = {
                     id: this.raw_data.data.response.docs[i].iati_identifier,
@@ -258,7 +259,7 @@ export default {
                     ) {
                       try {
                         activity_list[this.target_years_array[year]].push([
-                          this.raw_data.data.response.docs[i].iati_identifier,
+                          this.raw_data.data.response.docs[i].iati_identifier
                         ]);
                       } catch (e) {
                         console.log(e);
@@ -270,6 +271,8 @@ export default {
                         console.log(e);
                       }
                     }
+
+                    //TABLE STUFF HERE
 
                     if (q > 0) {
                       let master_rows = {
@@ -311,7 +314,7 @@ export default {
                     ) {
                       try {
                         activity_list[this.target_years_array[year]].push([
-                          this.raw_data.data.response.docs[i].iati_identifier,
+                          this.raw_data.data.response.docs[i].iati_identifier
                         ]);
                       } catch (e) {
                         console.log(e);
