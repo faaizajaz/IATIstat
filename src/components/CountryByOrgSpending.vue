@@ -238,7 +238,41 @@ export default {
 
         let ta = this.parallel_sort(sort_array);
 
-        this.newcategories=ta.pop();
+        let keeper = [[]];
+
+        for (let i in ta[0]) {
+          let keep = false;
+          //if ta[x][i] is less than 0 for all x, remove all elements ta[x][i]
+          // if its greater than 0 for any number, keep
+          for (let x in ta) {
+            //Here we can provide a minimum threshold for data display
+            if (typeof ta[x][i] === 'number' && ta[x][i] > 10000000) {
+              keep = true;
+
+            }
+
+          }
+
+          if (keep == true) {
+            //everything in ta[x] at i
+            for (let x in ta) {
+              if (keeper[x]) {
+                keeper[x].push(ta[x][i])
+              } else {
+                keeper.push([ta[x][i]]);
+              }
+            }
+          }
+
+          //console.log(ta[0][i]);
+        }
+
+
+
+
+        this.newcategories=keeper.pop();
+
+
 
         this.options = {
           ...this.options,
@@ -253,7 +287,7 @@ export default {
           for (let year in this.target_years_array) {
             let tmp = {
               name: this.target_years_array[year],
-              data: ta[year],
+              data: keeper[year],
             };
             this.series.push(tmp);
           }
