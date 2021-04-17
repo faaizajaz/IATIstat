@@ -4,11 +4,11 @@ import sector_codelist from "../../iatidata/sector-codelist.json";
 
 export const dataHelpers = {
   methods: {
-    sum_transactions: function (values, dates, target) {
+    sum_transactions: function (values, dates, types, target) {
       let sum = 0;
       try {
         for (let i = 0; i < values.length; i++) {
-          if (isodate(dates[i]).getFullYear() == parseInt(target, 10)) {
+          if (isodate(dates[i]).getFullYear() == parseInt(target, 10) && (types[i] == 3) || types[i] == 4) {
             sum += values[i];
             //console.log("trying to sum")
           }
