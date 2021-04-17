@@ -1,6 +1,6 @@
 <template>
   <div>
-    Country by org spending.
+    <b>Filter donor organizations</b>
     <v-select multiple :options="org_array" v-model="filter_org"></v-select>
     <button v-on:click="create_chart">Refresh chart</button>
     <apexchart type="bar" :options="options" :series="series"></apexchart>
@@ -229,6 +229,17 @@ export default {
 
         }
 
+        let sort_array = [];
+        for (let y in this.target_years_array) {
+          sort_array.push(newseries[this.target_years_array[y]]);
+        }
+
+        sort_array.push(this.newcategories);
+
+        let ta = this.parallel_sort(sort_array);
+
+        this.newcategories=ta.pop();
+
         this.options = {
           ...this.options,
           ... {
@@ -242,7 +253,7 @@ export default {
           for (let year in this.target_years_array) {
             let tmp = {
               name: this.target_years_array[year],
-              data: newseries[this.target_years_array[year]],
+              data: ta[year],
             };
             this.series.push(tmp);
           }
