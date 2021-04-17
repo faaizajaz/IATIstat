@@ -13,7 +13,7 @@
 import OrgByCountrySpending from "../components/OrgByCountrySpending";
 
 export default {
-  name: "SpendingBySector",
+  name: "SpendingByCountry",
 
   components: {
     OrgByCountrySpending,
