@@ -160,6 +160,8 @@ export default {
           // Create a new array with only transaction years
           let curr_transaction_years = this.make_years(curr_transaction_date);
 
+          let curr_transaction_type = this.raw_data.data.response.docs[i].transaction_type;
+
           try {
             curr_country_code = this.raw_data.data.response.docs[i]
               .recipient_country_code[0];
@@ -192,6 +194,7 @@ export default {
                 let q = this.sum_transactions(
                   curr_transaction_value,
                   curr_transaction_date,
+                  curr_transaction_type,
                   this.target_years_array[year]
                 );
                 let res = newseries[this.target_years_array[year]][a] + q;
@@ -247,6 +250,7 @@ export default {
                     let q = this.sum_transactions(
                       curr_transaction_value,
                       curr_transaction_date,
+                      curr_transaction_type,
                       this.target_years_array[year]
                     );
                     newseries[this.target_years_array[year]].push(q);
@@ -302,6 +306,7 @@ export default {
                     let q = this.sum_transactions(
                       curr_transaction_value,
                       curr_transaction_date,
+                      curr_transaction_type,
                       this.target_years_array[year]
                     );
                     newseries[this.target_years_array[year]].push(q);
