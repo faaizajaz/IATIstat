@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Welcome to the IATI dashboard.</h1>
-    <h3>
+    <h3 class="alert">
       PLEASE NOTE: The IATI API is temporarily offline for maintenance as of July 1 2021. It is not clear when it will be back online. For more information, see <a href="https://iatistandard.org/en/news/technical-notice-2-iatis-datastore-to-be-integrated-in-new-unified-single-platform/" class="skiplink">the official announcement</a>.
     </h3>
     <br />
@@ -43,4 +43,9 @@ export default {
 };
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+  .alert {
+    color: red;
+
+  }
+</style>
