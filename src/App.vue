@@ -18,12 +18,13 @@
                 country</router-link
               >
             </li>
-            <br>
-            <br>
+            <br />
+            <br />
             <h4><b>Country data</b></h4>
             <li class="nav-item">
               <router-link to="/byorgincountry"
-                ><span data-feather="home"></span>Spending in country</router-link
+                ><span data-feather="home"></span>Spending in
+                country</router-link
               >
             </li>
           </ul>
@@ -84,14 +85,15 @@ export default {
       let filters =
         "transaction_type,transaction_value_date,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency,recipient_country_code,iati_identifier";
 
-      let country_filters = "transaction_type,transaction_value_date,reporting_org_ref,reporting_org_narrative,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency,recipient_country_code,iati_identifier"
+      let country_filters =
+        "transaction_type,transaction_value_date,reporting_org_ref,reporting_org_narrative,sector,title_narrative,budget_value_usd_sum,transaction_value,transaction_value_sum,default_currency,recipient_country_code,iati_identifier";
       //because we have a scope inside this function
       let vm = this;
       //Hard-coded to retrieve 30k results.
       if (vm.current_org !== vm.organization && vm.organization) {
         axios
           .get(
-            "https://iatidatastore.iatistandard.org/search/activity/?q=reporting_org_ref:" +
+            "https://iati.cloud/search/activity/?q=reporting_org_ref:" +
               vm.organization +
               "&fl=" +
               filters +
@@ -111,16 +113,22 @@ export default {
       }
 
       if (vm.current_country !== vm.country && vm.country) {
-        axios.get(
-            "https://iatidatastore.iatistandard.org/search/activity?q=recipient_country_code:("+ vm.country +")&wt=json&fl=" + country_filters+"&rows=30000"
-          ).then(function (data) {
+        axios
+          .get(
+            "https://iati.cloud/search/activity?q=recipient_country_code:(" +
+              vm.country +
+              ")&wt=json&fl=" +
+              country_filters +
+              "&rows=30000"
+          )
+          .then(function (data) {
             console.log("Fetched country data");
-            vm.country_data=data;
-            vm.current_country=query.country;
-            vm.refresh_chart=true;
+            vm.country_data = data;
+            vm.current_country = query.country;
+            vm.refresh_chart = true;
           });
       } else {
-        vm.refresh_chart=true;
+        vm.refresh_chart = true;
         console.log("Same country data");
       }
     },
